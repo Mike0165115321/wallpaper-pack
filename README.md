@@ -10,9 +10,32 @@ Minimalist desktop wallpaper displays with Thai calendar, architectural particle
 
 ### Usage
 
-1. Open any `.html` file in a browser
-2. Set as full-screen desktop display
-3. Move mouse for parallax + shadow effect
+#### Free (no software required)
+
+1. Open `.html` file in **Chrome** or **Edge**
+2. Press `F11` for fullscreen
+
+**Dual monitor (free):**
+1. Open file → drag window to **Monitor 1** → `F11`
+2. Open file **again** → drag new window to **Monitor 2** → `F11`
+
+> 💡 Using Edge? Window stacking is easier — right-click taskbar Edge icon → "New window"
+
+#### With wallpaper software
+
+| Software | Price | Multi-monitor |
+|----------|-------|---------------|
+| Browser (F11) | Free | ✅ (manual) |
+| **Wallpaper Engine** | ~99 THB (Steam) | ✅ auto |
+| Lively | Free | ❌ no multi |
+
+### Features
+
+- 🖱️ **Mouse parallax** — background moves as you move cursor
+- 🌫️ **Shadow follow** — dark spot follows mouse
+- 🕸️ **Particle network** — live canvas animation, repels from mouse
+- 📅 **Monthly calendar** with Thai months
+- ⏰ **Clock with seconds**
 
 ### Adding new designs
 
