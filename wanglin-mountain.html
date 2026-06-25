@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WangLin · 望林</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{
+  font-family:'Sarabun','Noto Sans Thai',sans-serif;
+  background:#050508;
+  user-select:none;
+  -webkit-font-smoothing:antialiased
+}
+
+/* BG */
+.scene{
+  position:fixed;inset:0;
+  background:url('https://images.pexels.com/photos/34514431/pexels-photo-34514431.jpeg') center/cover no-repeat;
+  filter:brightness(0.82) saturate(1.05) contrast(1.1);
+  will-change:transform;
+  transition:transform 0.8s cubic-bezier(0.16,1,0.3,1)
+}
+
+.ink-wash{
+  position:fixed;inset:0;
+  background:linear-gradient(135deg, rgba(15,25,40,0.20) 0%, transparent 40%, transparent 70%, rgba(5,5,10,0.25) 100%);
+  mix-blend-mode:multiply;pointer-events:none
+}
+.vignette{
+  position:fixed;inset:0;
+  background:radial-gradient(ellipse 70% 70% at 50% 50%, transparent 25%, rgba(5,5,8,0.55) 100%);
+  pointer-events:none
+}
+
+/* Spotlight — follows mouse, adds depth */
+.spotlight{
+  position:fixed;inset:0;z-index:2;
+  pointer-events:none;
+  background:radial-gradient(circle 180px at 50% 50%, transparent 40%, rgba(0,0,0,0.03) 100%);
+  transition:background 0.3s ease-out;
+  will-change:background
+}
+
+/* Drifting mist — subtle atmospheric motion */
+.mist{
+  position:fixed;inset:0;z-index:1;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 40% at 20% 60%, rgba(200,210,220,0.015) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 30% at 80% 40%, rgba(200,210,220,0.01) 0%, transparent 70%);
+  animation:drifting 30s ease-in-out infinite alternate;
+  will-change:transform,opacity
+}
+@keyframes drifting{
+  0%{transform:translate(-2%,0);opacity:0.6}
+  50%{opacity:1}
+  100%{transform:translate(2%,1%);opacity:0.5}
+}
+@media(prefers-reduced-motion:reduce){.mist{animation:none}}
+
+/* LAYOUT */
+.flex{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;
+  z-index:3;
+  padding:clamp(20px,5vh,60px);
+  gap:clamp(16px,5vh,48px)
+}
+
+/* GLASS for calendar only */
+.glass{
+  background:rgba(255,255,255,0.10);
+  backdrop-filter:blur(28px) saturate(1.2);
+  -webkit-backdrop-filter:blur(28px) saturate(1.2);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 4px 40px rgba(0,0,0,0.08)
+}
+
+/* === CLOCK — no glass, floating === */
+.clock-panel{
+  text-align:center;
+  padding:0
+}
+
+.clock{
+  font-size:clamp(48px,min(16vh,12vw),120px);
+  font-weight:100;
+  color:rgba(255,255,255,0.92);
+  letter-spacing:clamp(6px,2vw,14px);
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+  text-shadow:0 1px 30px rgba(0,0,0,0.35), 0 0 80px rgba(0,0,0,0.05)
+}
+
+.sec-line{
+  font-size:clamp(20px,4vh,40px);
+  font-weight:100;
+  color:rgba(255,255,255,0.35);
+  letter-spacing:8px;
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+  margin-top:clamp(4px,0.8vh,10px);
+  text-shadow:0 1px 20px rgba(0,0,0,0.3)
+}
+
+.rule{
+  width:clamp(32px,5vw,52px);height:1px;
+  background:rgba(255,255,255,0.06);
+  margin:clamp(14px,2vh,20px) auto clamp(12px,1.5vh,16px)
+}
+
+.date-line{
+  font-size:clamp(14px,2.2vh,18px);
+  font-weight:400;
+  color:rgba(255,255,255,0.55);
+  letter-spacing:3px;
+  text-shadow:0 1px 15px rgba(0,0,0,0.35)
+}
+.date-line .num{font-weight:500;color:rgba(255,255,255,0.7)}
+
+/* === CALENDAR GLASS === */
+.cal-panel{
+  padding:clamp(16px,2.5vh,26px) clamp(20px,3vw,32px)
+}
+
+.cal-header{
+  font-size:clamp(13px,2vh,16px);
+  font-weight:500;
+  color:rgba(255,255,255,0.65);letter-spacing:2px;
+  margin-bottom:clamp(6px,0.8vh,10px)
+}
+.cal-header .cal-year{
+  font-weight:300;color:rgba(255,255,255,0.30);
+  font-size:clamp(11px,1.5vh,14px);margin-left:4px
+}
+
+.cal-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:2px
+}
+
+.cal-dow{
+  font-size:clamp(10px,1.3vh,12px);
+  font-weight:500;
+  color:rgba(255,255,255,0.22);text-align:center;
+  padding:0 0 clamp(6px,0.8vh,8px) 0
+}
+
+.cal-day{
+  font-size:clamp(12px,1.8vh,16px);
+  font-weight:400;
+  color:rgba(255,255,255,0.50);text-align:center;
+  padding:3px;line-height:1.5;
+  width:clamp(24px,4vh,36px);
+  height:clamp(24px,4vh,36px);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto
+}
+
+.cal-day.other{color:rgba(255,255,255,0.07)}
+.cal-day.today{
+  color:#fff;font-weight:600;
+  background:rgba(255,255,255,0.12);
+  border-radius:50%;
+  box-shadow:0 0 16px rgba(255,255,255,0.03)
+}
+
+/* BRAND */
+.brand{
+  position:fixed;z-index:3;pointer-events:none;
+  bottom:clamp(10px,1.8vh,18px);left:50%;
+  transform:translateX(-50%);
+  font-size:clamp(6px,0.9vh,8px);
+  font-weight:200;color:rgba(255,255,255,0.02);
+  letter-spacing:clamp(14px,2.5vw,28px);
+  text-transform:uppercase;text-wrap:nowrap
+}
+
+@media(prefers-reduced-motion:reduce){
+  .scene{transition:none}
+  .spotlight{display:none}
+  .mist{animation:none}
+}
+
+/* Particle canvas */
+#particles{
+  position:fixed;inset:0;z-index:1;
+  pointer-events:none
+}
+</style>
+</head>
+<body>
+
+<div class="scene" role="presentation" aria-hidden="true"></div>
+<canvas id="particles"></canvas>
+<div class="mist" role="presentation" aria-hidden="true"></div>
+<div class="ink-wash" role="presentation" aria-hidden="true"></div>
+<div class="vignette" role="presentation" aria-hidden="true"></div>
+<div class="spotlight" id="spotlight" role="presentation" aria-hidden="true"></div>
+
+<div class="flex">
+
+  <div class="clock-panel">
+    <div class="clock" aria-live="polite">
+      <span id="clockH">00</span>:<span id="clockM">00</span>
+    </div>
+    <div class="sec-line"><span id="clockS">00</span></div>
+    <div class="rule"></div>
+    <div class="date-line" id="dateDisplay">---</div>
+  </div>
+
+  <div class="glass cal-panel">
+    <div id="calendar"></div>
+  </div>
+
+</div>
+
+<div class="brand">WANGLIN · 望林</div>
+
+<script>
+(function(){
+  const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const days   = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  const dow    = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+  const $ = id => document.getElementById(id);
+  let pm=-1,ph=-1;
+
+  function renderCal(){
+    const n=new Date(),y=n.getFullYear(),m=n.getMonth(),td=n.getDate();
+    const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),dip=new Date(y,m,0).getDate();
+    let h='<div class="cal-header">'+months[m]+' <span class="cal-year">'+(y+543)+'</span></div><div class="cal-grid">';
+    for(let d=0;d<7;d++)h+='<div class="cal-dow">'+dow[d]+'</div>';
+    for(let d=dip-fd+1;d<=dip;d++)h+='<div class="cal-day other">'+d+'</div>';
+    for(let d=1;d<=dim;d++)h+='<div class="cal-day'+(d===td?' today':'')+'">'+d+'</div>';
+    const t=fd+dim;if(t%7>0)for(let d=1;d<=7-t%7;d++)h+='<div class="cal-day other">'+d+'</div>';
+    h+='</div>';
+    $('calendar').innerHTML=h;
+  }
+
+  function up(){
+    const n=new Date(),h=n.getHours(),m=n.getMinutes(),s=n.getSeconds();
+    const hh=String(h).padStart(2,'0'),mm=String(m).padStart(2,'0'),ss=String(s).padStart(2,'0');
+
+    if(m!==pm){$('clockH').textContent=hh;pm=m;}
+    $('clockM').textContent=mm;
+    $('clockS').textContent=ss;
+
+    if(m!==pm||h!==ph){
+      $('dateDisplay').innerHTML='วัน <span class="num">'+days[n.getDay()]+'</span> ที่ <span class="num">'+n.getDate()+'</span> '+months[n.getMonth()]+' <span class="num">'+(n.getFullYear()+543)+'</span>';
+      renderCal();
+      ph=h;
+    }
+  }
+
+  renderCal();
+  up();
+  setInterval(up,1000);
+
+  // === Mouse parallax + spotlight ===
+  const scene = document.querySelector('.scene');
+  const spot = document.getElementById('spotlight');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion:reduce)');
+  if (!prefersReduced.matches) {
+    let idleTimer;
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      const px = (x / 100 - 0.5) * 24;
+      const py = (y / 100 - 0.5) * 16;
+
+      scene.style.transform = `translate(${px}px,${py}px) scale(1.06)`;
+      spot.style.background = `radial-gradient(circle 180px at ${x}% ${y}%, transparent 30%, rgba(0,0,0,0.05) 100%)`;
+
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        scene.style.transform = `scale(1.06)`;
+        spot.style.background = `radial-gradient(circle 180px at 50% 50%, transparent 40%, rgba(0,0,0,0.03) 100%)`;
+      }, 3000);
+    }, { passive: true });
+  }
+
+  // === Particle network — architectural style ===
+  if (!prefersReduced.matches) {
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let W, H, mx, my;
+    function resize(){
+      W=canvas.width=window.innerWidth;
+      H=canvas.height=window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize',resize);
+    window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
+
+    const COUNT=55;
+    const particles=[];
+
+    for(let i=0;i<COUNT;i++){
+      particles.push({
+        x:Math.random()*W,y:Math.random()*H,
+        vx:(Math.random()-0.5)*0.3,
+        vy:-(0.1+Math.random()*0.25),
+        r:1.5+Math.random()*2
+      });
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+
+      // Move with drift + mouse repulsion
+      for(const p of particles){
+        let fx=0,fy=0;
+
+        // Drift upward
+        p.vy-=0.006;
+
+        // Repulsion from mouse
+        if(mx!==undefined){
+          const dx=p.x-mx,dy=p.y-my;
+          const d=Math.sqrt(dx*dx+dy*dy);
+          if(d<140&&d>0){
+            const force=(1-d/140)*2.0;
+            fx+=dx/d*force;
+            fy+=dy/d*force;
+          }
+        }
+
+        p.vx+=fx*0.12;
+        p.vy+=fy*0.12;
+        p.vx*=0.97;
+        p.vy*=0.97;
+        p.x+=p.vx;
+        p.y+=p.vy;
+
+        if(p.x<0||p.x>W)p.vx*=-1;
+        if(p.y<-20)p.y=H+10,p.x=Math.random()*W;
+      }
+
+      // Distance-based connections
+      const MAX_DIST=180;
+      for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+          const a=particles[i],b=particles[j];
+          const dx=a.x-b.x,dy=a.y-b.y;
+          const dist=Math.sqrt(dx*dx+dy*dy);
+          if(dist<MAX_DIST){
+            const alpha=(1-dist/MAX_DIST)*0.35;
+            ctx.beginPath();
+            ctx.moveTo(a.x,a.y);
+            ctx.lineTo(b.x,b.y);
+            ctx.strokeStyle=`rgba(210,225,240,${alpha})`;
+            ctx.lineWidth=0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw nodes
+      for(const p of particles){
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(210,225,240,${0.10+p.r*0.04})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+})();
+</script>
+</body>
+</html>
