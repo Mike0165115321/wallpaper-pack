@@ -4,15 +4,28 @@ Minimalist desktop wallpaper displays with Thai calendar, architectural particle
 
 ### Wallpapers
 
-| Name | Description |
-|------|-------------|
-| **WangLin Mountain** | Mountain landscape + glass calendar + floating clock + particle network + mouse parallax |
+| File | Language | Description |
+|------|----------|-------------|
+| `th/wanglin-mountain.html` | 🇹🇭 Thai | ปฏิทินไทย พ.ศ., วันเดือนปีไทย |
+| `en/wanglin-mountain.html` | 🇬🇧 English | Gregorian calendar, CE year |
+
+### Project Structure
+
+```
+wallpaper-pack/
+├── index.html              # Gallery / หน้ารวมวอลเปเปอร์
+├── th/                     # ภาษาไทย
+│   └── wanglin-mountain.html
+├── en/                     # English
+│   └── wanglin-mountain.html
+└── README.md
+```
 
 ### Usage
 
 #### Free (no software required)
 
-1. Open `.html` file in **Chrome** or **Edge**
+1. Open `th/wanglin-mountain.html` or `en/wanglin-mountain.html` in **Chrome** or **Edge**
 2. Press `F11` for fullscreen
 
 **Dual monitor (free):**
@@ -34,12 +47,12 @@ Minimalist desktop wallpaper displays with Thai calendar, architectural particle
 - 🖱️ **Mouse parallax** — background moves as you move cursor
 - 🌫️ **Shadow follow** — dark spot follows mouse
 - 🕸️ **Particle network** — live canvas animation, repels from mouse
-- 📅 **Monthly calendar** with Thai months
+- 📅 **Monthly calendar** (Thai or Gregorian)
 - ⏰ **Clock with seconds**
 
 ### Adding new designs
 
-1. Copy `wanglin-mountain.html` → `wanglin-xxx.html`
+1. Copy `th/wanglin-mountain.html` → `th/wanglin-xxx.html`
 2. Change background image, fonts, colors
 3. Add entry to `index.html`
 4. Commit
