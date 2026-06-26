@@ -151,25 +151,25 @@ body{
   pointer-events:none
 }
 .cal-panel{
-  background:rgba(8,18,12,0.50);
-  backdrop-filter:blur(16px) saturate(1.1);
-  -webkit-backdrop-filter:blur(16px) saturate(1.1);
+  background:rgba(10,20,14,0.35);
+  backdrop-filter:blur(20px) saturate(1.2);
+  -webkit-backdrop-filter:blur(20px) saturate(1.2);
   border-radius:14px;
-  border:1px solid rgba(100,200,150,0.06);
+  border:1px solid rgba(120,220,170,0.08);
   padding:clamp(10px,1.5vh,18px) clamp(16px,2.5vw,28px);
   box-shadow:0 4px 40px rgba(0,0,0,0.18)
 }
 .cal-header{
   font-size:clamp(12px,1.6vh,15px);
   font-weight:500;
-  color:rgba(200,230,215,0.55);
+  color:rgba(230,245,235,0.75);
   letter-spacing:2px;
   margin-bottom:clamp(5px,0.6vh,8px);
   text-align:center
 }
 .cal-header .cal-year{
   font-weight:300;
-  color:rgba(200,230,215,0.25);
+  color:rgba(230,245,235,0.40);
   font-size:clamp(10px,1.3vh,13px);
   margin-left:4px
 }
@@ -181,14 +181,14 @@ body{
 .cal-dow{
   font-size:clamp(9px,1.2vh,12px);
   font-weight:500;
-  color:rgba(200,230,215,0.30);
+  color:rgba(220,245,235,0.45);
   text-align:center;
   padding:0 0 clamp(4px,0.5vh,6px) 0
 }
 .cal-day{
   font-size:clamp(11px,1.5vh,14px);
   font-weight:400;
-  color:rgba(200,230,215,0.45);
+  color:rgba(220,245,235,0.60);
   text-align:center;
   padding:3px;
   line-height:1.4;
@@ -198,12 +198,13 @@ body{
   margin:0 auto;
   border-radius:6px
 }
-.cal-day.other{color:rgba(200,230,215,0.07)}
+.cal-day.other{color:rgba(220,245,235,0.12)}
 .cal-day.today{
-  color:rgba(235,250,240,0.90);
+  color:#fff;
   font-weight:600;
-  background:rgba(80,200,140,0.12);
-  border:1px solid rgba(80,200,140,0.15)
+  background:rgba(80,220,150,0.18);
+  border:1px solid rgba(80,220,150,0.20);
+  box-shadow:0 0 12px rgba(80,220,150,0.08)
 }
 
 /* === Brand === */
