@@ -112,98 +112,98 @@ body{
   pointer-events:none
 }
 .clock{
-  font-size:clamp(32px,min(9vh,7vw),72px);
+  font-size:clamp(40px,min(12vh,10vw),96px);
   font-weight:100;
-  color:rgba(180,230,200,0.88);
+  color:rgba(235,245,240,0.92);
   letter-spacing:clamp(4px,1.5vw,10px);
   font-variant-numeric:tabular-nums;
   line-height:1;
   font-family:'Noto Serif Thai','Sarabun',serif;
-  text-shadow:0 0 60px rgba(40,200,130,0.04), 0 1px 20px rgba(0,0,0,0.5)
+  text-shadow:0 0 60px rgba(0,0,0,0.15), 0 2px 30px rgba(0,0,0,0.5)
 }
-.clock .sep{opacity:0.28;margin:0 clamp(2px,0.3vw,6px)}
+.clock .sep{opacity:0.25;margin:0 clamp(2px,0.3vw,6px)}
 .sec-line{
-  font-size:clamp(12px,2.2vh,22px);
-  font-weight:200;
-  color:rgba(160,220,190,0.22);
+  font-size:clamp(16px,3vh,28px);
+  font-weight:300;
+  color:rgba(220,240,230,0.55);
   letter-spacing:6px;
   font-variant-numeric:tabular-nums;
   line-height:1;
-  margin-top:clamp(4px,0.6vh,8px)
+  margin-top:clamp(6px,0.8vh,12px)
 }
 .rule{
-  width:clamp(20px,3.5vw,36px);height:1px;
-  background:linear-gradient(90deg,transparent,rgba(60,200,140,0.10),transparent);
-  margin:clamp(10px,1.5vh,16px) auto clamp(8px,1vh,12px)
+  width:clamp(28px,4vw,44px);height:1px;
+  background:linear-gradient(90deg,transparent,rgba(180,220,200,0.15),transparent);
+  margin:clamp(12px,1.8vh,18px) auto clamp(10px,1.2vh,14px)
 }
 .date-line{
-  font-size:clamp(11px,1.6vh,15px);
-  font-weight:300;
-  color:rgba(160,220,190,0.40);
+  font-size:clamp(13px,2vh,18px);
+  font-weight:400;
+  color:rgba(210,230,220,0.65);
   letter-spacing:2px;
   font-family:'Noto Serif Thai','Sarabun',serif;
-  text-shadow:0 1px 10px rgba(0,0,0,0.4)
+  text-shadow:0 1px 15px rgba(0,0,0,0.5)
 }
-.date-line .num{font-weight:500;color:rgba(190,240,215,0.60)}
+.date-line .num{font-weight:600;color:rgba(230,245,235,0.85)}
 
 /* === Calendar === */
 .cal-wrap{
   pointer-events:none
 }
 .cal-panel{
-  background:rgba(6,16,10,0.45);
-  backdrop-filter:blur(12px) saturate(1.1);
-  -webkit-backdrop-filter:blur(12px) saturate(1.1);
-  border-radius:10px;
-  border:1px solid rgba(60,160,110,0.05);
-  padding:clamp(6px,1vh,12px) clamp(12px,1.8vw,20px);
-  box-shadow:0 4px 30px rgba(0,0,0,0.15)
+  background:rgba(8,18,12,0.50);
+  backdrop-filter:blur(16px) saturate(1.1);
+  -webkit-backdrop-filter:blur(16px) saturate(1.1);
+  border-radius:14px;
+  border:1px solid rgba(100,200,150,0.06);
+  padding:clamp(10px,1.5vh,18px) clamp(16px,2.5vw,28px);
+  box-shadow:0 4px 40px rgba(0,0,0,0.18)
 }
 .cal-header{
-  font-size:clamp(10px,1.3vh,13px);
-  font-weight:400;
-  color:rgba(160,220,190,0.35);
+  font-size:clamp(12px,1.6vh,15px);
+  font-weight:500;
+  color:rgba(200,230,215,0.55);
   letter-spacing:2px;
-  margin-bottom:clamp(3px,0.4vh,6px);
+  margin-bottom:clamp(5px,0.6vh,8px);
   text-align:center
 }
 .cal-header .cal-year{
-  font-weight:200;
-  color:rgba(160,220,190,0.15);
-  font-size:clamp(8px,1vh,11px);
-  margin-left:3px
+  font-weight:300;
+  color:rgba(200,230,215,0.25);
+  font-size:clamp(10px,1.3vh,13px);
+  margin-left:4px
 }
 .cal-grid{
   display:grid;
   grid-template-columns:repeat(7,1fr);
-  gap:1px
+  gap:2px
 }
 .cal-dow{
-  font-size:clamp(7px,0.9vh,10px);
-  font-weight:400;
-  color:rgba(160,220,190,0.13);
+  font-size:clamp(9px,1.2vh,12px);
+  font-weight:500;
+  color:rgba(200,230,215,0.30);
   text-align:center;
-  padding:0 0 clamp(3px,0.4vh,5px) 0
+  padding:0 0 clamp(4px,0.5vh,6px) 0
 }
 .cal-day{
-  font-size:clamp(9px,1.1vh,12px);
-  font-weight:300;
-  color:rgba(160,220,190,0.25);
+  font-size:clamp(11px,1.5vh,14px);
+  font-weight:400;
+  color:rgba(200,230,215,0.45);
   text-align:center;
-  padding:2px;
-  line-height:1.3;
-  width:clamp(18px,2.6vh,26px);
-  height:clamp(18px,2.6vh,26px);
+  padding:3px;
+  line-height:1.4;
+  width:clamp(24px,3.2vh,32px);
+  height:clamp(24px,3.2vh,32px);
   display:flex;align-items:center;justify-content:center;
   margin:0 auto;
-  border-radius:4px
+  border-radius:6px
 }
-.cal-day.other{color:rgba(160,220,190,0.04)}
+.cal-day.other{color:rgba(200,230,215,0.07)}
 .cal-day.today{
-  color:rgba(200,245,220,0.75);
+  color:rgba(235,250,240,0.90);
   font-weight:600;
-  background:rgba(60,180,120,0.07);
-  border:1px solid rgba(60,180,120,0.08)
+  background:rgba(80,200,140,0.12);
+  border:1px solid rgba(80,200,140,0.15)
 }
 
 /* === Brand === */
