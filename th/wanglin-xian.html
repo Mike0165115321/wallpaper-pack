@@ -416,41 +416,44 @@ body{
     el.innerHTML = swordSVG;
     wrap.appendChild(el);
 
-    // Each sword has its own personality
     const angle = Math.random() * Math.PI * 2;
-    const dist = 80 + Math.random() * 120;
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 2;
+    const dist = 150 + Math.random() * 100;
 
     swords.push({
       el,
-      x: cx + Math.cos(angle) * dist,
-      y: cy + Math.sin(angle) * dist * 0.6,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      // Personality traits
-      speed: 0.3 + Math.random() * 0.5,      // how fast they react
-      wander: 0.2 + Math.random() * 0.4,      // how much they wander
-      attract: 0.4 + Math.random() * 0.6,     // how much they follow mouse
-      radius: 60 + Math.random() * 80,         // comfort distance from mouse
-      independence: Math.random() * 0.5,       // how often they do their own thing
+      x: window.innerWidth / 2 + Math.cos(angle) * dist,
+      y: window.innerHeight / 2 + Math.sin(angle) * dist * 0.6,
+      // Personality
+      agility: 0.3 + Math.random() * 0.7,  // how fast it tracks mouse (0=sluggish, 1=instant)
+      orbitSpeed: 0.5 + Math.random() * 1.0, // how fast it orbits when idle
+      orbitRadius: 25 + Math.random() * 35,  // orbit radius when idle
       phase: Math.random() * Math.PI * 2,
       rot: 0,
-      rotV: 0
+      rotV: 0,
+      // State
+      trailing: Math.random() > 0.6 ? 0.3 + Math.random() * 0.4 : 0, // some swords trail more
+      glowPulse: Math.random() * Math.PI * 2
     });
   }
 
   // ==================== MOUSE TRACKING ====================
   let mx = window.innerWidth / 2;
   let my = window.innerHeight / 2;
+  let lastMx = mx, lastMy = my;
+  let mouseSpeed = 0;
+  let idleTime = 0; // how long mouse has been still
+  let lastMoveTime = Date.now();
 
   // Parallax background
   const bg = document.getElementById('sceneBg');
   let bgIdleTimer;
 
   document.addEventListener('mousemove', e => {
+    lastMx = mx; lastMy = my;
     mx = e.clientX;
     my = e.clientY;
+    mouseSpeed = Math.sqrt((mx - lastMx) ** 2 + (my - lastMy) ** 2);
+    lastMoveTime = Date.now();
 
     const px = (e.clientX / window.innerWidth - 0.5) * 20;
     const py = (e.clientY / window.innerHeight - 0.5) * 14;
@@ -462,117 +465,86 @@ body{
     }, 3000);
   }, { passive: true });
 
-  window.addEventListener('resize', () => {});
-
-  // ==================== SMART SWORD LOOP — alive, organic ====================
-  function lerp(a, b, t) { return a + (b - a) * t; }
+  // ==================== SMART SWORD LOOP ====================
   function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, v)); }
 
   function loop(){
     const now = Date.now() * 0.001;
     const W = window.innerWidth;
     const H = window.innerHeight;
-    const cx = W / 2;
-    const cy = H / 2;
+
+    // Idle time — how long since last mouse move
+    const timeSinceMove = (Date.now() - lastMoveTime) / 1000;
+    const isIdle = timeSinceMove > 0.8;
+    const idleFactor = isIdle ? Math.min(1, (timeSinceMove - 0.8) / 3) : 0; // 0→1 over 3s
 
     for (let i = 0; i < swords.length; i++) {
       const s = swords[i];
 
-      // --- 1. ATTRACTION to mouse area (but not directly on it) ---
-      const dxMouse = mx - s.x;
-      const dyMouse = my - s.y;
-      const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse) || 1;
+      // ============ TARGET POSITION ============
+      let targetX, targetY;
+      let tipAngle; // angle the sword tip should point toward
 
-      // Comfort zone: if too close, push away; if too far, pull in
-      let attractForce = 0;
-      if (distMouse < s.radius * 0.4) {
-        // Too close — push away
-        attractForce = -(1 - distMouse / (s.radius * 0.4)) * 0.8;
-      } else if (distMouse > s.radius * 1.6) {
-        // Too far — pull in
-        attractForce = (distMouse / (s.radius * 1.6) - 1) * 0.6;
+      if (isIdle && idleFactor > 0.1) {
+        // === IDLE MODE: orbit around mouse ===
+        const orbitAngle = now * (0.8 + s.orbitSpeed * 1.2) + s.phase;
+        const orbitRad = s.orbitRadius * (1 + Math.sin(now * 0.3 + s.phase) * 0.2);
+        targetX = mx + Math.cos(orbitAngle) * orbitRad;
+        targetY = my + Math.sin(orbitAngle) * orbitRad * 0.7;
+
+        // Tip points toward center (mouse)
+        tipAngle = Math.atan2(my - targetY, mx - targetX) * (180 / Math.PI) + 90;
       } else {
-        // In comfort zone — gentle random drift
-        attractForce = 0;
-      }
+        // === TRACKING MODE: head toward mouse ===
+        // Fast mouse -> some swords trail behind (especially those with high 'trailing')
+        const trailFactor = s.trailing * Math.min(1, mouseSpeed / 15) * 0.6;
+        targetX = mx + (Math.random() - 0.5) * trailFactor * 60;
+        targetY = my + (Math.random() - 0.5) * trailFactor * 40;
 
-      // Apply attraction force
-      s.vx += (dxMouse / distMouse) * attractForce * s.attract * 0.08;
-      s.vy += (dyMouse / distMouse) * attractForce * s.attract * 0.08;
+        // Tip always points at the mouse itself (not the trailing position)
+        tipAngle = Math.atan2(my - s.y, mx - s.x) * (180 / Math.PI) + 90;
 
-      // --- 2. GENTLE WANDER — each sword drifts with its own rhythm ---
-      const wanderAngle = now * (0.15 + s.wander * 0.3) + s.phase;
-      const wanderStrength = 0.03 + s.wander * 0.04;
-      s.vx += Math.cos(wanderAngle) * wanderStrength;
-      s.vy += Math.sin(wanderAngle * 0.7) * wanderStrength;
-
-      // --- 3. INDEPENDENCE — occasional impulse in random direction ---
-      const indepPulse = Math.sin(now * (0.1 + s.independence * 0.5) + s.phase * 2);
-      if (Math.abs(indepPulse) > 0.92) {
-        const dir = Math.sin(now * 0.3 + s.phase * 3);
-        s.vx += dir * 0.12 * s.independence;
-        s.vy += Math.cos(now * 0.25 + s.phase * 2) * 0.12 * s.independence;
-      }
-
-      // --- 4. SEPARATION — avoid other swords ---
-      for (let j = i + 1; j < swords.length; j++) {
-        const o = swords[j];
-        const sx = s.x - o.x;
-        const sy = s.y - o.y;
-        const d = Math.sqrt(sx * sx + sy * sy) || 1;
-        if (d < 60) {
-          const force = (1 - d / 60) * 0.3;
-          s.vx += (sx / d) * force;
-          s.vy += (sy / d) * force;
-          o.vx -= (sx / d) * force;
-          o.vy -= (sy / d) * force;
+        // On fast mouse movement, add some "slip" to rotation
+        if (mouseSpeed > 20) {
+          const slip = Math.sin(now * 3 + s.phase) * Math.min(1, mouseSpeed / 40) * 15 * (1 - s.agility);
+          tipAngle += slip;
         }
       }
 
-      // --- 5. BOUNDARY — gentle push from edges ---
-      const margin = 80;
-      if (s.x < margin) s.vx += (margin - s.x) * 0.005;
-      if (s.x > W - margin) s.vx -= (s.x - (W - margin)) * 0.005;
-      if (s.y < margin) s.vy += (margin - s.y) * 0.005;
-      if (s.y > H - margin) s.vy -= (s.y - (H - margin)) * 0.005;
+      // ============ MOVEMENT: smooth tracking toward target ============
+      const dx = targetX - s.x;
+      const dy = targetY - s.y;
+      const ease = isIdle ? 0.03 : 0.04 + s.agility * 0.08;
+      s.x += dx * ease;
+      s.y += dy * ease;
 
-      // --- 6. DAMPENING & SPEED LIMIT ---
-      s.vx *= 0.97;
-      s.vy *= 0.97;
-      const speed = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
-      const maxSpeed = 1.8 + s.speed * 1.5;
-      if (speed > maxSpeed) {
-        s.vx = (s.vx / speed) * maxSpeed;
-        s.vy = (s.vy / speed) * maxSpeed;
-      }
-
-      // --- 7. APPLY MOVEMENT ---
-      s.x += s.vx * s.speed;
-      s.y += s.vy * s.speed;
-
-      // --- 8. ROTATION — face direction of movement, with overshoot ---
-      const targetRot = Math.atan2(s.vy, s.vx) * (180 / Math.PI) + 90;
-      // Smooth rotation with inertia — swords don't spin instantly
-      let rotDiff = targetRot - s.rot;
+      // ============ ROTATION with inertia ============
+      let rotDiff = tipAngle - s.rot;
       while (rotDiff > 180) rotDiff -= 360;
       while (rotDiff < -180) rotDiff += 360;
-      s.rotV += rotDiff * 0.004;
-      s.rotV *= 0.92;
+
+      const rotEase = isIdle ? 0.06 : 0.05 + s.agility * 0.1;
+      s.rotV += rotDiff * rotEase * 0.15;
+      s.rotV *= 0.88;
       s.rot += s.rotV;
 
-      // Add a gentle idle sway when moving slowly
-      const idleSway = Math.sin(now * 0.5 + s.phase) * (1 - Math.min(1, speed * 2)) * 3;
+      // ============ ENERGY / GLOW effect ============
+      // When orbiting fast/idle, swords glow brighter and pulse
+      const energyLevel = isIdle ? idleFactor : Math.min(1, mouseSpeed / 30);
+      const glowIntensity = energyLevel * (0.6 + 0.4 * Math.sin(now * 2 + s.glowPulse));
+      const opacity = clamp(0.6 + glowIntensity * 0.35, 0.2, 0.98);
 
+      // ============ APPLY ============
+      const idleSway = isIdle ? Math.sin(now * 1.5 + s.phase) * 2 * idleFactor : 0;
       const finalRot = s.rot + 270 + idleSway;
 
       s.el.style.transform = `translate(${s.x - 10}px, ${s.y - 65}px) rotate(${finalRot}deg)`;
-
-      // --- 9. OPACITY — fade based on speed and position ---
-      const speedFactor = Math.min(1, speed * 0.5);
-      const centerDist = Math.sqrt((s.x - cx) ** 2 + (s.y - cy) ** 2);
-      const edgeFade = Math.min(1, 1 - (centerDist - 400) / 300);
-      s.el.style.opacity = clamp(0.4 + speedFactor * 0.4 + edgeFade * 0.2, 0.1, 0.95);
+      s.el.style.opacity = opacity;
+      s.el.style.filter = `drop-shadow(0 0 ${4 + glowIntensity * 10}px rgba(60,255,160,${0.05 + glowIntensity * 0.12}))`;
     }
+
+    // Track mouse speed decay
+    mouseSpeed *= 0.85;
 
     requestAnimationFrame(loop);
   }
