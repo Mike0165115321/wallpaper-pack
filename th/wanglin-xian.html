@@ -407,98 +407,94 @@ body{
   const NET_COUNT = 40;
   const netParticles = [];
 
-  for (let i = 0; i < NET_COUNT; i++) {
+    for (let i = 0; i < NET_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2;
     netParticles.push({
       x: Math.random() * nW,
       y: Math.random() * nH,
-      // Each has its own direction and speed
-      vx: Math.cos(angle) * (0.15 + Math.random() * 0.4),
-      vy: Math.sin(angle) * (0.15 + Math.random() * 0.4),
+      vx: Math.cos(angle) * (0.04 + Math.random() * 0.08),
+      vy: Math.sin(angle) * (0.04 + Math.random() * 0.08),
       r: 1.5 + Math.random() * 3,
       alpha: 0.15 + Math.random() * 0.25,
       phase: Math.random() * Math.PI * 2,
-      // Personality
-      turnSpeed: 0.01 + Math.random() * 0.03, // how fast it changes direction
+      turnSpeed: 0.003 + Math.random() * 0.01,
       wanderAngle: Math.random() * Math.PI * 2,
-      bold: 0.3 + Math.random() * 0.7 // how far it dares to connect
+      bold: 0.3 + Math.random() * 0.7
     });
+  }
+
+  function lightningLine(ctx, x1, y1, x2, y2, alpha, width){
+    const dx = x2 - x1, dy = y2 - y1;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const segments = Math.max(4, Math.floor(dist / 18));
+    const perpAngle = Math.atan2(dy, dx) + Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    for (let s = 1; s < segments; s++) {
+      const t = s / segments;
+      const bx = x1 + dx * t;
+      const by = y1 + dy * t;
+      const jitter = (Math.random() - 0.5) * dist * 0.07;
+      const jitterScale = Math.sin(t * Math.PI);
+      const lx = bx + Math.cos(perpAngle) * jitter * jitterScale;
+      const ly = by + Math.sin(perpAngle) * jitter * jitterScale;
+      ctx.lineTo(lx, ly);
+    }
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = `rgba(80, 255, 200, ${alpha})`;
+    ctx.lineWidth = width;
+    ctx.stroke();
   }
 
   function drawNetwork(){
     nCtx.clearRect(0, 0, nW, nH);
     const now = Date.now() * 0.001;
 
-    // --- Move particles — each has its own life ---
     for (const p of netParticles) {
-      // Gentle wander: slowly change direction
       p.wanderAngle += (Math.random() - 0.5) * p.turnSpeed;
+      p.vx += Math.cos(p.wanderAngle) * 0.001;
+      p.vy += Math.sin(p.wanderAngle) * 0.001;
 
-      // Apply wander
-      p.vx += Math.cos(p.wanderAngle) * 0.004;
-      p.vy += Math.sin(p.wanderAngle) * 0.004;
-
-      // Mouse repulsion
       if (nmx > 0) {
-        const dx = p.x - nmx;
-        const dy = p.y - nmy;
+        const dx = p.x - nmx, dy = p.y - nmy;
         const d = Math.sqrt(dx*dx + dy*dy) || 1;
         if (d < 180) {
-          const force = (1 - d / 180) * 0.12;
+          const force = (1 - d / 180) * 0.04;
           p.vx += (dx / d) * force;
           p.vy += (dy / d) * force;
         }
       }
 
-      // Dampening + speed limit
       const spd = Math.sqrt(p.vx*p.vx + p.vy*p.vy);
-      if (spd > 0.8) { p.vx = (p.vx/spd) * 0.8; p.vy = (p.vy/spd) * 0.8; }
-      if (spd < 0.15) { p.vx *= 1.01; p.vy *= 1.01; } // never stop completely
+      if (spd > 0.2) { p.vx = (p.vx/spd)*0.2; p.vy = (p.vy/spd)*0.2; }
+      if (spd < 0.04) { p.vx *= 1.01; p.vy *= 1.01; }
 
       p.x += p.vx;
       p.y += p.vy;
 
-      // Wrap edges
-      if (p.x < -20) { p.x = nW + 20; p.wanderAngle += Math.PI * 0.5; }
-      if (p.x > nW + 20) { p.x = -20; p.wanderAngle += Math.PI * 0.5; }
-      if (p.y < -20) { p.y = nH + 20; p.wanderAngle += Math.PI * 0.5; }
-      if (p.y > nH + 20) { p.y = -20; p.wanderAngle += Math.PI * 0.5; }
+      if (p.x < -20) { p.x = nW + 20; p.wanderAngle += Math.PI * 0.3; }
+      if (p.x > nW + 20) { p.x = -20; p.wanderAngle += Math.PI * 0.3; }
+      if (p.y < -20) { p.y = nH + 20; p.wanderAngle += Math.PI * 0.3; }
+      if (p.y > nH + 20) { p.y = -20; p.wanderAngle += Math.PI * 0.3; }
     }
 
-    // --- Dynamic connections: only when close ---
     for (let i = 0; i < netParticles.length; i++) {
       for (let j = i + 1; j < netParticles.length; j++) {
         const a = netParticles[i], b = netParticles[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
+        const dx = a.x - b.x, dy = a.y - b.y;
         const dist = Math.sqrt(dx*dx + dy*dy);
-
         const maxDist = 180 + a.bold * 80 + b.bold * 80;
+
         if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.12;
-          const thickness = (1 - dist / maxDist) * 1.5;
+          const alpha = (1 - dist / maxDist) * 0.20;
+          const thickness = (1 - dist / maxDist) * 1.8;
 
-          nCtx.beginPath();
-          nCtx.moveTo(a.x, a.y);
-          nCtx.lineTo(b.x, b.y);
-          nCtx.strokeStyle = `rgba(80, 230, 180, ${alpha})`;
-          nCtx.lineWidth = thickness;
-          nCtx.stroke();
-
-          // Energy pulse where they connect
-          if (dist < maxDist * 0.4) {
-            const pulse = Math.sin(now * 1.5 + a.phase + b.phase) * 0.5 + 0.5;
-            const px = (a.x + b.x) / 2;
-            const py = (a.y + b.y) / 2;
-            nCtx.beginPath();
-            nCtx.arc(px, py, 1.5 + pulse * 2, 0, Math.PI * 2);
-            nCtx.fillStyle = `rgba(150, 255, 220, ${pulse * 0.25})`;
-            nCtx.fill();
-          }
+          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.6, thickness);
+          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.12, thickness * 4);
+          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.25, thickness * 0.4);
         }
       }
     }
-
     // --- Draw particles ---
     for (const p of netParticles) {
       const pulse = 0.5 + 0.5 * Math.sin(now * p.phase * 0.5 + p.phase);
