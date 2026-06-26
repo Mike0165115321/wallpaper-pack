@@ -413,10 +413,10 @@ body{
     netParticles.push({
       x: Math.random() * nW,
       y: Math.random() * nH,
-      vx: Math.cos(angle) * (0.10 + Math.random() * 0.15),
-      vy: Math.sin(angle) * (0.10 + Math.random() * 0.15),
-      r: 1.2 + Math.random() * 2,
-      alpha: 0.20 + Math.random() * 0.20,
+      vx: Math.cos(angle) * (0.08 + Math.random() * 0.12),
+      vy: Math.sin(angle) * (0.08 + Math.random() * 0.12),
+      r: 1.6 + Math.random() * 2.4,
+      alpha: 0.25 + Math.random() * 0.20,
       phase: Math.random() * Math.PI * 2,
       turnSpeed: 0.003 + Math.random() * 0.01,
       wanderAngle: Math.random() * Math.PI * 2,
@@ -435,7 +435,7 @@ body{
       const t = s / segments;
       const bx = x1 + dx * t;
       const by = y1 + dy * t;
-      const jitter = (Math.random() - 0.5) * dist * 0.04;
+      const jitter = (Math.random() - 0.5) * dist * 0.055;
       const jitterScale = Math.sin(t * Math.PI);
       const lx = bx + Math.cos(perpAngle) * jitter * jitterScale;
       const ly = by + Math.sin(perpAngle) * jitter * jitterScale;
@@ -487,12 +487,12 @@ body{
         const maxDist = 180 + a.bold * 80 + b.bold * 80;
 
         if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.20;
-          const thickness = (1 - dist / maxDist) * 1.2;
+          const alpha = (1 - dist / maxDist) * 0.28;
+          const thickness = (1 - dist / maxDist) * 1.8;
 
           lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.7, thickness);
-          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.10, thickness * 3);
-          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.20, thickness * 0.4);
+          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.12, thickness * 3);
+          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.25, thickness * 0.4);
         }
       }
     }
@@ -503,19 +503,19 @@ body{
       let mGlow = 0;
       if (nmx > 0) {
         const md = Math.sqrt((p.x - nmx)**2 + (p.y - nmy)**2);
-        if (md < 250) mGlow = (1 - md / 250) * 0.3;
+        if (md < 250) mGlow = (1 - md / 250) * 0.4;
       }
 
       // Glow aura
       nCtx.beginPath();
-      nCtx.arc(p.x, p.y, p.r * 3 + mGlow * 8, 0, Math.PI * 2);
-      nCtx.fillStyle = `rgba(80, 240, 190, ${p.alpha * 0.04 * pulse + mGlow * 0.04})`;
+      nCtx.arc(p.x, p.y, p.r * 4 + mGlow * 10, 0, Math.PI * 2);
+      nCtx.fillStyle = `rgba(80, 240, 190, ${p.alpha * 0.05 * pulse + mGlow * 0.05})`;
       nCtx.fill();
 
       // Core
       nCtx.beginPath();
-      nCtx.arc(p.x, p.y, p.r * pulse * (0.5 + mGlow * 0.4), 0, Math.PI * 2);
-      nCtx.fillStyle = `rgba(${180 + mGlow * 75}, 255, ${230 + mGlow * 25}, ${p.alpha * pulse + mGlow * 0.3})`;
+      nCtx.arc(p.x, p.y, p.r * pulse * (0.55 + mGlow * 0.4), 0, Math.PI * 2);
+      nCtx.fillStyle = `rgba(${180 + mGlow * 75}, 255, ${230 + mGlow * 25}, ${p.alpha * pulse + mGlow * 0.35})`;
       nCtx.fill();
     }
 
