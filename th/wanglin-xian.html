@@ -405,30 +405,28 @@ body{
   // Track mouse for network interaction
   document.addEventListener('mousemove', e => { nmx = e.clientX; nmy = e.clientY; }, { passive: true });
 
-  const NODE_COUNT = 30;
+  const NODE_COUNT = 35;
   const nodes = [];
-  const MAX_CONNECT = 350; // max connection distance
+  const MAX_CONNECT = 400;
 
   for (let i = 0; i < NODE_COUNT; i++) {
-    const isHub = Math.random() > 0.7; // 30% are hub nodes
+    const isHub = Math.random() > 0.6;
     nodes.push({
       x: Math.random() * nW,
       y: Math.random() * nH,
-      vx: (Math.random() - 0.5) * 0.1,
-      vy: (Math.random() - 0.5) * 0.1,
-      r: isHub ? 2.5 + Math.random() * 2 : 1.2 + Math.random() * 1.5,
-      alpha: isHub ? 0.12 + Math.random() * 0.08 : 0.04 + Math.random() * 0.06,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: isHub ? 3 + Math.random() * 3 : 1.5 + Math.random() * 2,
+      alpha: isHub ? 0.25 + Math.random() * 0.15 : 0.1 + Math.random() * 0.1,
       pulse: Math.random() * Math.PI * 2,
-      pulseSpeed: 0.3 + Math.random() * 0.8,
+      pulseSpeed: 0.5 + Math.random() * 1.5,
       isHub,
-      // Energy pulses traveling along connections
       energyPhase: Math.random() * Math.PI * 2,
-      energySpeed: 0.2 + Math.random() * 0.4,
+      energySpeed: 0.4 + Math.random() * 0.8,
       connections: []
     });
   }
 
-  // Build connections based on proximity
   function buildConnections(){
     for (let i = 0; i < nodes.length; i++) {
       nodes[i].connections = [];
@@ -443,75 +441,68 @@ body{
         }
       }
       dists.sort((a, b) => a.dist - b.dist);
-      // Hubs connect to more nodes
-      const maxConns = nodes[i].isHub ? 4 + Math.floor(Math.random() * 3) : 1 + Math.floor(Math.random() * 3);
+      const maxConns = nodes[i].isHub ? 5 + Math.floor(Math.random() * 4) : 2 + Math.floor(Math.random() * 3);
       nodes[i].connections = dists.slice(0, Math.min(maxConns, dists.length)).map(d => d.idx);
     }
   }
   buildConnections();
 
-  // Rebuild connections occasionally as nodes move
   let rebuildTimer = 0;
 
   function drawNetwork(){
     nCtx.clearRect(0, 0, nW, nH);
     const now = Date.now() * 0.001;
 
-    // Rebuild connections every ~10 seconds
     rebuildTimer++;
-    if (rebuildTimer > 600) { buildConnections(); rebuildTimer = 0; }
+    if (rebuildTimer > 300) { buildConnections(); rebuildTimer = 0; }
 
-    // --- Update nodes with spring physics ---
+    // --- Update nodes with aggressive spring physics ---
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i];
 
-      // Spring attraction to connected nodes
       for (const j of a.connections) {
         const b = nodes[j];
         const dx = b.x - a.x;
         const dy = b.y - a.y;
         const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-        const idealDist = 120 + Math.random() * 80; // each connection has natural length
-        const force = (dist - idealDist) * 0.00008;
+        const idealDist = 100 + Math.random() * 120;
+        const force = (dist - idealDist) * 0.0003;
         a.vx += (dx / dist) * force;
         a.vy += (dy / dist) * force;
       }
 
-      // Gentle random drift
-      a.vx += (Math.random() - 0.5) * 0.008;
-      a.vy += (Math.random() - 0.5) * 0.008;
+      // Chaotic drift
+      a.vx += (Math.random() - 0.5) * 0.025;
+      a.vy += (Math.random() - 0.5) * 0.025;
 
-      // Mouse repulsion
+      // Mouse repulsion — strong
       if (nmx > 0) {
         const dx = a.x - nmx;
         const dy = a.y - nmy;
         const dist = Math.sqrt(dx*dx + dy*dy) || 1;
-        if (dist < 120) {
-          const force = (1 - dist / 120) * 0.06;
+        if (dist < 200) {
+          const force = (1 - dist / 200) * 0.15;
           a.vx += (dx / dist) * force;
           a.vy += (dy / dist) * force;
         }
       }
 
-      // Dampening
-      a.vx *= 0.98;
-      a.vy *= 0.98;
+      a.vx *= 0.95;
+      a.vy *= 0.95;
 
-      // Speed limit
       const spd = Math.sqrt(a.vx*a.vx + a.vy*a.vy);
-      if (spd > 0.5) { a.vx = (a.vx/spd)*0.5; a.vy = (a.vy/spd)*0.5; }
+      if (spd > 1.2) { a.vx = (a.vx/spd)*1.2; a.vy = (a.vy/spd)*1.2; }
 
       a.x += a.vx;
       a.y += a.vy;
 
-      // Wrap
       if (a.x < -30) a.x = nW + 30;
       if (a.x > nW + 30) a.x = -30;
       if (a.y < -30) a.y = nH + 30;
       if (a.y > nH + 30) a.y = -30;
     }
 
-    // --- Draw connections with energy flow ---
+    // --- Draw connections — thick, bright, aggressive ---
     for (let i = 0; i < nodes.length; i++) {
       const a = nodes[i];
       for (const j of a.connections) {
@@ -522,75 +513,71 @@ body{
 
         if (dist >= MAX_CONNECT) continue;
 
-        // Base line — very subtle
         const distFactor = 1 - dist / MAX_CONNECT;
-        const baseAlpha = distFactor * 0.04;
+        const baseAlpha = distFactor * 0.12;
 
+        // Main line
         nCtx.beginPath();
         nCtx.moveTo(a.x, a.y);
         nCtx.lineTo(b.x, b.y);
-        nCtx.strokeStyle = `rgba(80, 210, 170, ${baseAlpha})`;
-        nCtx.lineWidth = 0.4;
+        nCtx.strokeStyle = `rgba(60, 230, 180, ${baseAlpha})`;
+        nCtx.lineWidth = 0.8 + distFactor * 1.2;
         nCtx.stroke();
 
-        // Mouse glow — lines near mouse pulse brighter
+        // Mouse glow
         let mouseGlow = 0;
         if (nmx > 0) {
           const midX = (a.x + b.x) / 2;
           const midY = (a.y + b.y) / 2;
           const md = Math.sqrt((midX - nmx)**2 + (midY - nmy)**2);
-          if (md < 200) mouseGlow = (1 - md / 200) * 0.6;
+          if (md < 250) mouseGlow = (1 - md / 250) * 0.8;
         }
 
-        // Energy pulse traveling along connection
-        if (mouseGlow > 0.05 || Math.random() < 0.03) {
-          // Pulse position oscillates along the line
-          const pulsePos = (Math.sin(now * a.energySpeed + a.energyPhase + j * 0.5) + 1) / 2;
-          const px = a.x + (b.x - a.x) * pulsePos;
-          const py = a.y + (b.y - a.y) * pulsePos;
-          const pulseAlpha = (0.15 + mouseGlow * 0.5) * distFactor;
+        // Energy pulse — frequent and bright
+        const pulsePos = (Math.sin(now * a.energySpeed + a.energyPhase + j * 0.7) + 1) / 2;
+        const px = a.x + (b.x - a.x) * pulsePos;
+        const py = a.y + (b.y - a.y) * pulsePos;
+        const pulseAlpha = (0.3 + mouseGlow * 0.6) * distFactor;
 
-          nCtx.beginPath();
-          nCtx.arc(px, py, 1.2 + mouseGlow * 1.5, 0, Math.PI * 2);
-          nCtx.fillStyle = `rgba(120, 240, 200, ${pulseAlpha})`;
-          nCtx.fill();
-        }
+        nCtx.beginPath();
+        nCtx.arc(px, py, 1.5 + mouseGlow * 2.5, 0, Math.PI * 2);
+        nCtx.fillStyle = `rgba(150, 255, 220, ${pulseAlpha})`;
+        nCtx.fill();
 
-        // Mouse glow line overlay
+        // Mouse glow overlay — thick bright line
         if (mouseGlow > 0.05) {
           nCtx.beginPath();
           nCtx.moveTo(a.x, a.y);
           nCtx.lineTo(b.x, b.y);
-          nCtx.strokeStyle = `rgba(150, 255, 220, ${mouseGlow * 0.3 * distFactor})`;
-          nCtx.lineWidth = 1 + mouseGlow * 2;
+          nCtx.strokeStyle = `rgba(180, 255, 230, ${mouseGlow * 0.35 * distFactor})`;
+          nCtx.lineWidth = 2 + mouseGlow * 4;
           nCtx.stroke();
         }
       }
     }
 
-    // --- Draw nodes ---
+    // --- Draw nodes — big and bright ---
     for (const node of nodes) {
-      const pulse = 0.6 + 0.4 * Math.sin(now * node.pulseSpeed + node.pulse);
-      const r = node.r * pulse;
-      const a = node.alpha * pulse;
+      const pulse = 0.4 + 0.6 * Math.sin(now * node.pulseSpeed + node.pulse);
+      const r = node.r * (0.8 + pulse * 0.4);
+      const a = node.alpha * (0.6 + pulse * 0.5);
 
-      // Mouse proximity glow
       let mGlow = 0;
       if (nmx > 0) {
         const md = Math.sqrt((node.x - nmx)**2 + (node.y - nmy)**2);
-        if (md < 150) mGlow = (1 - md / 150) * 0.3;
+        if (md < 200) mGlow = (1 - md / 200) * 0.5;
       }
 
-      // Outer glow (bigger for hubs & mouse-near)
+      // Outer glow
       nCtx.beginPath();
-      nCtx.arc(node.x, node.y, (node.isHub ? 6 : 3) + mGlow * 8, 0, Math.PI * 2);
-      nCtx.fillStyle = `rgba(80, 220, 170, ${a * 0.06 + mGlow * 0.04})`;
+      nCtx.arc(node.x, node.y, (node.isHub ? 12 : 6) + mGlow * 15, 0, Math.PI * 2);
+      nCtx.fillStyle = `rgba(60, 230, 180, ${a * 0.08 + mGlow * 0.06})`;
       nCtx.fill();
 
       // Core
       nCtx.beginPath();
-      nCtx.arc(node.x, node.y, r * (0.6 + mGlow), 0, Math.PI * 2);
-      nCtx.fillStyle = `rgba(${160 + mGlow * 60}, ${240 + mGlow * 15}, ${210 + mGlow * 30}, ${a + mGlow * 0.3})`;
+      nCtx.arc(node.x, node.y, r * (0.7 + mGlow * 0.5), 0, Math.PI * 2);
+      nCtx.fillStyle = `rgba(${180 + mGlow * 75}, 255, ${220 + mGlow * 35}, ${a + mGlow * 0.4})`;
       nCtx.fill();
     }
 
