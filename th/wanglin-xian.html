@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WangLin · เซียนกระบี่</title>
+<title>WangLin · สายฟ้ากระบี่</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600&family=Noto+Serif+Thai:wght@200;400;600&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@ body{
   -webkit-font-smoothing:antialiased
 }
 
-/* === BG — เซียนกระบี่ === */
+/* === BG === */
 .bg-wrap{
   position:fixed;inset:0;
   animation:bgBreath 20s ease-in-out infinite alternate
@@ -28,77 +28,75 @@ body{
 }
 .bg{
   position:absolute;inset:0;
-  background:
-    url('สวยงาม.png') center/cover no-repeat;
-  filter:brightness(0.60) saturate(1.1) contrast(1.05);
+  background:url('สวยงาม.png') center/cover no-repeat;
+  filter:brightness(0.55) saturate(1.2) contrast(1.05) hue-rotate(5deg);
   will-change:transform;
   transition:transform 0.8s cubic-bezier(0.16,1,0.3,1)
 }
 .bg-overlay{
   position:fixed;inset:0;z-index:1;
   background:
-    linear-gradient(180deg, rgba(4,12,8,0.45) 0%, transparent 25%, transparent 70%, rgba(2,8,4,0.55) 100%),
-    radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(2,8,4,0.35) 100%);
+    linear-gradient(180deg, rgba(2,10,6,0.50) 0%, transparent 20%, transparent 75%, rgba(2,8,4,0.60) 100%),
+    radial-gradient(ellipse 70% 70% at 50% 50%, transparent 20%, rgba(2,10,5,0.45) 100%);
   pointer-events:none
 }
 
-/* === Mist layers === */
+/* === Mist === */
 .mist{
   position:fixed;inset:0;z-index:2;
   pointer-events:none;
   background:
-    radial-gradient(ellipse 100% 30% at 20% 50%, rgba(20,60,40,0.04) 0%, transparent 70%),
-    radial-gradient(ellipse 80% 25% at 80% 40%, rgba(30,70,50,0.03) 0%, transparent 70%);
-  animation:mistDrift 40s ease-in-out infinite alternate;
+    radial-gradient(ellipse 100% 30% at 15% 55%, rgba(20,60,40,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 25% at 85% 45%, rgba(30,70,50,0.02) 0%, transparent 70%);
+  animation:mistDrift 45s ease-in-out infinite alternate;
   will-change:transform,opacity
 }
 @keyframes mistDrift{
-  0%{transform:translate(-3%,0);opacity:0.6}
-  50%{opacity:0.8}
-  100%{transform:translate(3%,1%);opacity:0.5}
+  0%{transform:translate(-3%,0);opacity:0.5}
+  50%{opacity:0.7}
+  100%{transform:translate(3%,1%);opacity:0.4}
 }
 @media(prefers-reduced-motion:reduce){.mist{animation:none}}
 
-/* === Lightning === */
+/* === Lightning flash === */
 .lightning{
   position:fixed;inset:0;z-index:2;
   pointer-events:none;opacity:0;
   background:
-    linear-gradient(135deg, rgba(180,230,255,0.02) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 80% at 70% 15%, rgba(180,230,255,0.015) 0%, transparent 100%);
-  animation:lightningFlash 8s ease-in-out infinite
+    radial-gradient(ellipse 30% 60% at 70% 15%, rgba(80,255,180,0.015) 0%, transparent 100%);
+  animation:lFlash 10s ease-in-out infinite
 }
-@keyframes lightningFlash{
-  0%,90%,94%,100%{opacity:0}
-  91%{opacity:0.4}
-  92%{opacity:0}
-  93%{opacity:0.2}
-  95%{opacity:0}
+@keyframes lFlash{
+  0%,92%,95%,97%,100%{opacity:0}
+  93%{opacity:0.3}
+  94%{opacity:0}
+  96%{opacity:0.15}
+  98%{opacity:0}
 }
 @media(prefers-reduced-motion:reduce){.lightning{display:none}}
 
-/* === Star field (jade tinted) === */
+/* === Stars (jade tinted) === */
 .stars{
   position:fixed;inset:0;z-index:1;
   pointer-events:none;
   background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(180,220,200,0.5), transparent),
-    radial-gradient(1px 1px at 30% 70%, rgba(180,220,200,0.3), transparent),
-    radial-gradient(1.5px 1.5px at 50% 10%, rgba(200,240,220,0.6), transparent),
-    radial-gradient(1px 1px at 70% 30%, rgba(180,220,200,0.3), transparent),
-    radial-gradient(1px 1px at 90% 60%, rgba(200,240,220,0.4), transparent),
-    radial-gradient(1.5px 1.5px at 15% 85%, rgba(180,220,200,0.3), transparent),
-    radial-gradient(1px 1px at 45% 45%, rgba(180,220,200,0.3), transparent),
-    radial-gradient(1px 1px at 80% 80%, rgba(200,240,220,0.4), transparent);
-  animation:twinkle 5s ease-in-out infinite alternate;
+    radial-gradient(1px 1px at 10% 20%, rgba(150,220,190,0.5), transparent),
+    radial-gradient(1px 1px at 30% 70%, rgba(150,220,190,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 50% 10%, rgba(170,240,210,0.6), transparent),
+    radial-gradient(1px 1px at 70% 30%, rgba(150,220,190,0.3), transparent),
+    radial-gradient(1px 1px at 90% 60%, rgba(170,240,210,0.4), transparent),
+    radial-gradient(1.5px 1.5px at 20% 88%, rgba(150,220,190,0.3), transparent),
+    radial-gradient(1px 1px at 45% 45%, rgba(150,220,190,0.3), transparent),
+    radial-gradient(1px 1px at 78% 82%, rgba(170,240,210,0.4), transparent);
+  animation:twinkle 6s ease-in-out infinite alternate;
 }
 @keyframes twinkle{
-  0%{opacity:0.4}
-  100%{opacity:0.9}
+  0%{opacity:0.3}
+  100%{opacity:0.8}
 }
 @media(prefers-reduced-motion:reduce){.stars{animation:none;opacity:0.6}}
 
-/* === Main container === */
+/* === Main container — centers everything === */
 .main{
   position:fixed;inset:0;z-index:5;
   display:flex;flex-direction:column;align-items:center;
@@ -106,7 +104,7 @@ body{
   pointer-events:none
 }
 
-/* === Clock — jade/gold top === */
+/* === Clock === */
 .clock-panel{
   position:fixed;top:clamp(18px,3.5vh,44px);
   left:50%;transform:translateX(-50%);
@@ -116,18 +114,18 @@ body{
 .clock{
   font-size:clamp(32px,min(9vh,7vw),72px);
   font-weight:100;
-  color:rgba(200,230,210,0.90);
+  color:rgba(180,230,200,0.88);
   letter-spacing:clamp(4px,1.5vw,10px);
   font-variant-numeric:tabular-nums;
   line-height:1;
   font-family:'Noto Serif Thai','Sarabun',serif;
-  text-shadow:0 0 40px rgba(80,180,130,0.06), 0 1px 20px rgba(0,0,0,0.5)
+  text-shadow:0 0 60px rgba(40,200,130,0.04), 0 1px 20px rgba(0,0,0,0.5)
 }
-.clock .sep{opacity:0.30;margin:0 clamp(2px,0.3vw,6px)}
+.clock .sep{opacity:0.28;margin:0 clamp(2px,0.3vw,6px)}
 .sec-line{
   font-size:clamp(12px,2.2vh,22px);
   font-weight:200;
-  color:rgba(180,210,195,0.25);
+  color:rgba(160,220,190,0.22);
   letter-spacing:6px;
   font-variant-numeric:tabular-nums;
   line-height:1;
@@ -135,45 +133,45 @@ body{
 }
 .rule{
   width:clamp(20px,3.5vw,36px);height:1px;
-  background:linear-gradient(90deg,transparent,rgba(100,200,160,0.12),transparent);
+  background:linear-gradient(90deg,transparent,rgba(60,200,140,0.10),transparent);
   margin:clamp(10px,1.5vh,16px) auto clamp(8px,1vh,12px)
 }
 .date-line{
   font-size:clamp(11px,1.6vh,15px);
   font-weight:300;
-  color:rgba(180,210,195,0.45);
+  color:rgba(160,220,190,0.40);
   letter-spacing:2px;
   font-family:'Noto Serif Thai','Sarabun',serif;
   text-shadow:0 1px 10px rgba(0,0,0,0.4)
 }
-.date-line .num{font-weight:500;color:rgba(210,235,220,0.65)}
+.date-line .num{font-weight:500;color:rgba(190,240,215,0.60)}
 
-/* === Calendar — bottom === */
+/* === Calendar === */
 .cal-wrap{
   position:fixed;bottom:clamp(14px,2.5vh,28px);
   left:50%;transform:translateX(-50%);
   z-index:7;pointer-events:none
 }
 .cal-panel{
-  background:rgba(8,20,14,0.50);
+  background:rgba(6,16,10,0.45);
   backdrop-filter:blur(12px) saturate(1.1);
   -webkit-backdrop-filter:blur(12px) saturate(1.1);
   border-radius:10px;
-  border:1px solid rgba(80,160,120,0.06);
+  border:1px solid rgba(60,160,110,0.05);
   padding:clamp(6px,1vh,12px) clamp(12px,1.8vw,20px);
   box-shadow:0 4px 30px rgba(0,0,0,0.15)
 }
 .cal-header{
   font-size:clamp(10px,1.3vh,13px);
   font-weight:400;
-  color:rgba(180,210,195,0.40);
+  color:rgba(160,220,190,0.35);
   letter-spacing:2px;
   margin-bottom:clamp(3px,0.4vh,6px);
   text-align:center
 }
 .cal-header .cal-year{
   font-weight:200;
-  color:rgba(180,210,195,0.18);
+  color:rgba(160,220,190,0.15);
   font-size:clamp(8px,1vh,11px);
   margin-left:3px
 }
@@ -185,14 +183,14 @@ body{
 .cal-dow{
   font-size:clamp(7px,0.9vh,10px);
   font-weight:400;
-  color:rgba(180,210,195,0.15);
+  color:rgba(160,220,190,0.13);
   text-align:center;
   padding:0 0 clamp(3px,0.4vh,5px) 0
 }
 .cal-day{
   font-size:clamp(9px,1.1vh,12px);
   font-weight:300;
-  color:rgba(180,210,195,0.30);
+  color:rgba(160,220,190,0.25);
   text-align:center;
   padding:2px;
   line-height:1.3;
@@ -202,25 +200,12 @@ body{
   margin:0 auto;
   border-radius:4px
 }
-.cal-day.other{color:rgba(180,210,195,0.05)}
+.cal-day.other{color:rgba(160,220,190,0.04)}
 .cal-day.today{
-  color:rgba(210,235,220,0.80);
+  color:rgba(200,245,220,0.75);
   font-weight:600;
-  background:rgba(80,180,130,0.08);
-  border:1px solid rgba(80,180,130,0.10)
-}
-
-/* === Celestial being container === */
-.xian-wrap{
-  position:relative;
-  width:clamp(180px, 35vh, 320px);
-  height:clamp(260px, 48vh, 460px);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:clamp(6px,1.5vh,16px)
-}
-.xian-wrap svg{
-  width:100%;height:100%;
-  overflow:visible
+  background:rgba(60,180,120,0.07);
+  border:1px solid rgba(60,180,120,0.08)
 }
 
 /* === Swords container === */
@@ -230,23 +215,23 @@ body{
 }
 .sword{
   position:absolute;
-  width:14px;height:clamp(55px,9vh,80px);
+  width:20px;height:clamp(90px,14vh,130px);
   transform-origin:50% 100%;
   will-change:transform;
   transition:opacity 0.5s
 }
 .sword svg{
   width:100%;height:100%;
-  display:block;
-  filter:drop-shadow(0 0 8px rgba(80,200,150,0.10))
+  display:block
 }
 .sword-glow{
   position:absolute;
-  width:14px;height:clamp(55px,9vh,80px);
+  width:20px;height:clamp(90px,14vh,130px);
   top:0;left:0;
-  background:linear-gradient(180deg, rgba(80,200,150,0.04) 0%, transparent 100%);
+  background:linear-gradient(180deg, rgba(40,220,130,0.03) 0%, transparent 100%);
   border-radius:10px;
-  pointer-events:none
+  pointer-events:none;
+  filter:blur(4px)
 }
 
 /* === Brand === */
@@ -254,7 +239,7 @@ body{
   position:fixed;z-index:5;pointer-events:none;
   bottom:clamp(6px,0.8vh,10px);right:clamp(12px,1.8vw,20px);
   font-size:clamp(5px,0.7vh,7px);
-  font-weight:200;color:rgba(180,210,195,0.03);
+  font-weight:200;color:rgba(160,220,190,0.03);
   letter-spacing:clamp(10px,2vw,20px);
   text-transform:uppercase;text-wrap:nowrap
 }
@@ -268,12 +253,11 @@ body{
 /* === Reduced motion === */
 @media(prefers-reduced-motion:reduce){
   .bg-wrap{animation:none}
-  .bg{filter:brightness(0.65) saturate(1.05)}
+  .bg{filter:brightness(0.6) saturate(1.05)}
   .stars{animation:none}
   .mist{animation:none}
   .lightning{display:none}
   .sword{display:none}
-  #rightArm{display:none}
 }
 </style>
 </head>
@@ -300,135 +284,12 @@ body{
     <div class="date-line" id="dateDisplay">---</div>
   </div>
 
+  <!-- center empty — swords are the star -->
+
   <div class="cal-wrap">
     <div class="cal-panel">
       <div id="calendar"></div>
     </div>
-  </div>
-
-  <div class="xian-wrap">
-    <svg viewBox="0 0 240 440" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="xianAura" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#5ac08a" stop-opacity="0.05"/>
-          <stop offset="40%" stop-color="#3a9860" stop-opacity="0.03"/>
-          <stop offset="100%" stop-color="#2a7848" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="xianInnerAura" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#80d4a0" stop-opacity="0.08"/>
-          <stop offset="50%" stop-color="#4aaa70" stop-opacity="0.03"/>
-          <stop offset="100%" stop-color="#2a7848" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="figureBody" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1a3828"/>
-          <stop offset="40%" stop-color="#142c1e"/>
-          <stop offset="100%" stop-color="#0e1e14"/>
-        </linearGradient>
-        <linearGradient id="robeTrim" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#80d4a0" stop-opacity="0.08"/>
-          <stop offset="100%" stop-color="#80d4a0" stop-opacity="0"/>
-        </linearGradient>
-        <linearGradient id="armGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#1e4030"/>
-          <stop offset="100%" stop-color="#162c20"/>
-        </linearGradient>
-      </defs>
-
-      <!-- Aura / Mandala -->
-      <circle cx="120" cy="210" r="130" fill="url(#xianAura)"/>
-      <circle cx="120" cy="210" r="100" fill="url(#xianInnerAura)"/>
-      <circle cx="120" cy="210" r="120" stroke="rgba(80,200,150,0.03)" stroke-width="0.5"/>
-      <circle cx="120" cy="210" r="110" stroke="rgba(80,200,150,0.02)" stroke-width="0.3"/>
-      <circle cx="120" cy="210" r="90" stroke="rgba(80,200,150,0.02)" stroke-width="0.3"/>
-
-      <!-- Backlight -->
-      <ellipse cx="120" cy="190" rx="45" ry="80" fill="rgba(80,200,150,0.015)"/>
-
-      <!-- === Celestial Being === -->
-      <!-- Head -->
-      <ellipse cx="120" cy="82" rx="13" ry="17" fill="url(#figureBody)" stroke="rgba(80,200,150,0.05)" stroke-width="0.5"/>
-
-      <!-- Crown / headpiece (jade style) -->
-      <path d="M107,76 Q112,50 120,42 Q128,50 133,76" fill="url(#figureBody)" stroke="rgba(80,200,150,0.06)" stroke-width="0.8"/>
-      <ellipse cx="120" cy="45" rx="3.5" ry="1.8" fill="rgba(80,200,150,0.15)"/>
-      <!-- Crown jewel -->
-      <circle cx="120" cy="40" r="2" fill="rgba(80,200,150,0.10)"/>
-      <circle cx="108" cy="66" r="1.2" fill="rgba(80,200,150,0.10)"/>
-      <circle cx="132" cy="66" r="1.2" fill="rgba(80,200,150,0.10)"/>
-
-      <!-- Hair flowing -->
-      <path d="M106,80 Q98,98 95,130 Q97,135 105,133 Q108,116 110,98" fill="url(#figureBody)"/>
-      <path d="M134,80 Q142,98 145,130 Q143,135 135,133 Q132,116 130,98" fill="url(#figureBody)"/>
-
-      <!-- Neck -->
-      <rect x="116" y="98" width="8" height="10" rx="3" fill="url(#figureBody)"/>
-
-      <!-- Upper body — jade robes -->
-      <path d="M95,108 Q88,128 82,175 Q78,205 72,330 L168,330 Q162,205 158,175 Q152,128 145,108 Z"
-            fill="url(#figureBody)" stroke="rgba(80,200,150,0.04)" stroke-width="0.5"/>
-      <!-- Robe edge -->
-      <path d="M95,108 Q88,128 82,175 Q78,205 72,330"
-            fill="none" stroke="url(#robeTrim)" stroke-width="1"/>
-
-      <!-- Collar -->
-      <path d="M110,108 Q120,122 130,108" fill="none" stroke="rgba(80,200,150,0.06)" stroke-width="0.8"/>
-
-      <!-- Belt / sash (jade ornament) -->
-      <path d="M84,205 Q120,215 156,205" fill="none" stroke="rgba(80,200,150,0.05)" stroke-width="1.2"/>
-      <circle cx="120" cy="210" r="3" fill="rgba(80,200,150,0.06)"/>
-      <circle cx="120" cy="210" r="1.5" fill="rgba(80,200,150,0.10)"/>
-
-      <!-- Left arm (resting) -->
-      <path d="M95,116 Q75,132 58,168 Q53,182 56,198 Q50,208 48,222"
-            fill="none" stroke="url(#figureBody)" stroke-width="11" stroke-linecap="round"/>
-      <path d="M95,116 Q75,132 58,168"
-            fill="none" stroke="rgba(80,200,150,0.03)" stroke-width="1"/>
-
-      <!-- Ribbon from left arm -->
-      <path d="M48,218 Q38,232 42,250 Q48,265 36,278"
-            fill="none" stroke="rgba(80,200,150,0.05)" stroke-width="1.8"/>
-
-      <!-- === RIGHT ARM (raises, rotates to track swords) === -->
-      <g id="rightArm">
-        <!-- Arm glow -->
-        <path d="M150,116 Q158,96 155,68 Q153,52 150,40"
-              fill="none" stroke="rgba(80,200,150,0.03)" stroke-width="12" stroke-linecap="round"/>
-
-        <!-- Sleeve -->
-        <path d="M145,112 Q157,115 164,122 Q168,128 161,136 Q155,132 148,128"
-              fill="url(#figureBody)" stroke="rgba(80,200,150,0.04)" stroke-width="0.5"/>
-
-        <!-- Arm -->
-        <path d="M150,116 Q158,96 155,68 Q153,52 150,40"
-              fill="none" stroke="url(#armGrad)" stroke-width="7" stroke-linecap="round"/>
-        <!-- Arm highlight -->
-        <path d="M150,114 Q157,95 154,68 Q153,54 150,42"
-              fill="none" stroke="rgba(80,200,150,0.03)" stroke-width="1"/>
-
-        <!-- Hand in sword gesture -->
-        <g transform="translate(150,38)">
-          <circle cx="0" cy="0" r="3.5" fill="url(#figureBody)" stroke="rgba(80,200,150,0.03)" stroke-width="0.4"/>
-          <!-- Fingers extended up (sword mudra) -->
-          <path d="M-1,-3 Q0,-13 1,-17" fill="none" stroke="url(#armGrad)" stroke-width="2.2" stroke-linecap="round"/>
-          <path d="M1.5,-3 Q2.5,-11 2.5,-15" fill="none" stroke="rgba(80,200,150,0.02)" stroke-width="0.7" stroke-linecap="round"/>
-          <path d="M2,-2 Q3,-10 3,-14" fill="none" stroke="url(#armGrad)" stroke-width="2.2" stroke-linecap="round"/>
-        </g>
-      </g>
-
-      <!-- Flowing ribbon from right arm -->
-      <g opacity="0.4">
-        <path d="M158,128 Q172,138 176,158 Q178,175 168,190"
-              fill="none" stroke="rgba(80,200,150,0.04)" stroke-width="1.3"/>
-        <path d="M160,130 Q178,142 182,165 Q185,185 172,200"
-              fill="none" stroke="rgba(80,200,150,0.02)" stroke-width="0.8"/>
-      </g>
-
-      <!-- Lotus base -->
-      <g opacity="0.03">
-        <path d="M90,335 Q95,320 100,335 Q105,315 110,335 Q115,318 120,335 Q125,315 130,335 Q135,320 140,335 Q145,315 150,335"
-              fill="none" stroke="#80d4a0" stroke-width="1"/>
-      </g>
-    </svg>
   </div>
 </div>
 
@@ -477,50 +338,76 @@ body{
   updateClock();
   setInterval(updateClock,500);
 
-  // ==================== SVORDS (Jian) ====================
-  const SWORD_COUNT = 7;
-  const armEl = document.getElementById('rightArm');
-  const pivotX = 150, pivotY = 116; // shoulder pivot in SVG viewBox
-
-  // Create swords — redesigned as authentic jian
+  // ==================== LIGHTNING SVORDS (Jian) ====================
+  const SWORD_COUNT = 9;
   const wrap = document.getElementById('swordsWrap');
   const swords = [];
+
+  // Lightning jian SVG — green lightning blade
   const swordSVG = `
-    <svg viewBox="0 0 14 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 20 130" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="jianBlade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#b0d8c0" stop-opacity="0.80"/>
-          <stop offset="25%" stop-color="#d0f0d8" stop-opacity="0.95"/>
-          <stop offset="60%" stop-color="#90c8a0" stop-opacity="0.80"/>
-          <stop offset="100%" stop-color="#70a880" stop-opacity="0.6"/>
+          <stop offset="0%" stop-color="#70e8b0" stop-opacity="0.80"/>
+          <stop offset="20%" stop-color="#b0ffd0" stop-opacity="0.95"/>
+          <stop offset="50%" stop-color="#50d890" stop-opacity="0.85"/>
+          <stop offset="80%" stop-color="#30b870" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="#209860" stop-opacity="0.5"/>
         </linearGradient>
-        <linearGradient id="jianGlow" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#80d4a0" stop-opacity="0"/>
-          <stop offset="50%" stop-color="#80d4a0" stop-opacity="0.06"/>
-          <stop offset="100%" stop-color="#80d4a0" stop-opacity="0"/>
+        <linearGradient id="lightningEdge" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#80ffc0" stop-opacity="0.6"/>
+          <stop offset="50%" stop-color="#40e890" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#80ffc0" stop-opacity="0.1"/>
         </linearGradient>
+        <filter id="swordGlow">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
       </defs>
+
+      <!-- Lightning aura around blade -->
+      <path d="M5,5 L3,15 L6,12 L2,30 L7,25 L3,45 L8,38 L4,55 L9,50"
+            fill="none" stroke="rgba(60,255,160,0.04)" stroke-width="3" stroke-linecap="round"/>
+      <path d="M15,5 L17,15 L14,12 L18,30 L13,25 L17,45 L12,38 L16,55 L11,50"
+            fill="none" stroke="rgba(60,255,160,0.03)" stroke-width="2.5" stroke-linecap="round"/>
+
       <!-- Blade glow -->
-      <rect x="3" y="0" width="8" height="50" rx="3" fill="url(#jianGlow)"/>
-      <!-- Blade (double-edged straight sword) -->
-      <path d="M6,0 L8,0 L8.5,47 L7,50 L5.5,47 Z" fill="url(#jianBlade)"/>
-      <path d="M6,0 L7,2 L7,47 L6,49 Z" fill="rgba(255,255,255,0.06)"/>
-      <!-- Fuller (blood groove) -->
-      <line x1="7" y1="6" x2="7" y2="42" stroke="rgba(255,255,255,0.04)" stroke-width="0.4"/>
-      <!-- Guard (tsuba) — traditional jian guard -->
-      <path d="M2,49 L12,49 L11.5,51 L2.5,51 Z" fill="#2a3a30" stroke="rgba(80,200,150,0.10)" stroke-width="0.3"/>
-      <!-- Handle (wrapped) -->
-      <rect x="5" y="51" width="4" height="14" rx="1" fill="#1a2820" stroke="rgba(80,200,150,0.04)" stroke-width="0.3"/>
-      <!-- Handle cord wrapping -->
-      <line x1="5.5" y1="53" x2="8.5" y2="53" stroke="rgba(80,200,150,0.06)" stroke-width="0.5"/>
-      <line x1="5.5" y1="56" x2="8.5" y2="56" stroke="rgba(80,200,150,0.06)" stroke-width="0.5"/>
-      <line x1="5.5" y1="59" x2="8.5" y2="59" stroke="rgba(80,200,150,0.06)" stroke-width="0.5"/>
-      <line x1="5.5" y1="62" x2="8.5" y2="62" stroke="rgba(80,200,150,0.06)" stroke-width="0.5"/>
-      <!-- Pommel -->
-      <circle cx="7" cy="66" r="1.8" fill="#2a3a30" stroke="rgba(80,200,150,0.06)" stroke-width="0.3"/>
-      <!-- Tassel (jian tassel) -->
-      <path d="M7,68 Q9,73 5,78" fill="none" stroke="rgba(80,200,150,0.10)" stroke-width="1"/>
-      <path d="M7,68 Q5,74 9,79" fill="none" stroke="rgba(80,200,150,0.06)" stroke-width="0.7"/>
+      <rect x="5" y="2" width="10" height="80" rx="4" fill="url(#lightningEdge)"/>
+
+      <!-- Main blade (double-edged straight sword) -->
+      <path d="M9,0 L11,0 L11.5,75 L10,80 L8.5,75 Z" fill="url(#jianBlade)" filter="url(#swordGlow)"/>
+
+      <!-- Blade edge highlight -->
+      <path d="M9.5,2 L10,4 L10,72 L9.5,76 Z" fill="rgba(200,255,230,0.08)"/>
+
+      <!-- Lightning bolt pattern on blade -->
+      <path d="M8,15 L12,20 L7,25 L11,30 L6,35 L10,40 L5,45 L9,50 L4,55 L8,60 L5,65"
+            fill="none" stroke="rgba(100,255,180,0.04)" stroke-width="0.6"/>
+
+      <!-- Guard (tsuba) — traditional jian guard with lightning motif -->
+      <path d="M4,79 L16,79 L15.5,82 L4.5,82 Z" fill="#1a2e22" stroke="rgba(60,220,140,0.10)" stroke-width="0.5"/>
+
+      <!-- Handle -->
+      <rect x="7" y="82" width="6" height="22" rx="1.5" fill="#0e1e14" stroke="rgba(60,220,140,0.03)" stroke-width="0.3"/>
+
+      <!-- Cord wrapping on handle -->
+      <line x1="7.5" y1="85" x2="12.5" y2="85" stroke="rgba(60,220,140,0.05)" stroke-width="0.6"/>
+      <line x1="7.5" y1="89" x2="12.5" y2="89" stroke="rgba(60,220,140,0.05)" stroke-width="0.6"/>
+      <line x1="7.5" y1="93" x2="12.5" y2="93" stroke="rgba(60,220,140,0.05)" stroke-width="0.6"/>
+      <line x1="7.5" y1="97" x2="12.5" y2="97" stroke="rgba(60,220,140,0.05)" stroke-width="0.6"/>
+      <line x1="7.5" y1="101" x2="12.5" y2="101" stroke="rgba(60,220,140,0.05)" stroke-width="0.6"/>
+
+      <!-- Jade crystal pommel -->
+      <circle cx="10" cy="106" r="3.5" fill="rgba(40,200,130,0.12)" stroke="rgba(60,220,140,0.08)" stroke-width="0.5"/>
+      <circle cx="10" cy="106" r="1.5" fill="rgba(80,255,180,0.10)"/>
+
+      <!-- Tassel (jian sui — sword tassel) -->
+      <path d="M10,110 Q13,116 8,124" fill="none" stroke="rgba(40,200,130,0.06)" stroke-width="1.5"/>
+      <path d="M10,110 Q6,117 12,125" fill="none" stroke="rgba(40,200,130,0.04)" stroke-width="1"/>
+      <path d="M10,110 Q10,118 9,126" fill="none" stroke="rgba(40,200,130,0.03)" stroke-width="0.8"/>
     </svg>`;
 
   for (let i = 0; i < SWORD_COUNT; i++) {
@@ -530,11 +417,9 @@ body{
     wrap.appendChild(el);
     swords.push({
       el,
-      phase: (i / SWORD_COUNT) * Math.PI * 2,
-      radius: 70 + Math.random() * 30,
+      phase: (i / SWORD_COUNT) * Math.PI * 2 + (Math.random() - 0.5) * 0.3,
+      radius: 100 + Math.random() * 50,
       ox: 0, oy: 0,
-      tx: 0, ty: 0,
-      rot: 0,
       floatPhase: Math.random() * Math.PI * 2
     });
   }
@@ -543,21 +428,8 @@ body{
   let mx = window.innerWidth / 2;
   let my = window.innerHeight / 2;
   let sx = mx, sy = my;
-  let armAngle = -90;
-  let armAngleTarget = -90;
-  let figCX = window.innerWidth / 2;
-  let figCY = window.innerHeight / 2;
-  let figScale = 1;
 
-  function updateFigMetrics(){
-    const wrapEl = document.querySelector('.xian-wrap');
-    const rect = wrapEl.getBoundingClientRect();
-    figScale = rect.width / 240;
-    figCX = rect.left + 150 * figScale;
-    figCY = rect.top + 116 * figScale;
-  }
-
-  // Parallax background on mouse move (subtle)
+  // Parallax background
   const bg = document.getElementById('sceneBg');
   let bgIdleTimer;
 
@@ -565,9 +437,8 @@ body{
     mx = e.clientX;
     my = e.clientY;
 
-    // Subtle background parallax
-    const px = (e.clientX / window.innerWidth - 0.5) * 18;
-    const py = (e.clientY / window.innerHeight - 0.5) * 12;
+    const px = (e.clientX / window.innerWidth - 0.5) * 20;
+    const py = (e.clientY / window.innerHeight - 0.5) * 14;
     bg.style.transform = `translate(${px}px,${py}px) scale(1.04)`;
 
     clearTimeout(bgIdleTimer);
@@ -576,44 +447,36 @@ body{
     }, 3000);
   }, { passive: true });
 
-  window.addEventListener('resize', () => updateFigMetrics());
-
-  // ==================== ANIMATION LOOP ====================
+  // ==================== SVORD ANIMATION LOOP ====================
   function lerp(a, b, t) { return a + (b - a) * t; }
 
   function loop(){
-    sx = lerp(sx, mx, 0.08);
-    sy = lerp(sy, my, 0.08);
+    sx = lerp(sx, mx, 0.06);
+    sy = lerp(sy, my, 0.06);
 
-    // Arm angle from figure to mouse
-    const dx = sx - figCX;
-    const dy = sy - figCY;
-    let rawAngle = Math.atan2(dx, -dy) * (180 / Math.PI);
-    rawAngle = Math.max(-70, Math.min(70, rawAngle));
-    armAngleTarget = rawAngle;
-    armAngle = lerp(armAngle, armAngleTarget, 0.06);
-    armEl.setAttribute('transform', `rotate(${armAngle}, ${pivotX}, ${pivotY})`);
-
-    // Position swords orbiting around mouse
     const now = Date.now() * 0.001;
+
     for (let i = 0; i < swords.length; i++) {
       const s = swords[i];
-      const angle = s.phase + now * 0.35;
-      const pushOut = 1 + Math.sin(now * 0.5 + s.floatPhase) * 0.06;
+      const angle = s.phase + now * 0.25;
+      const pushOut = 1 + Math.sin(now * 0.4 + s.floatPhase) * 0.08;
 
       const r = s.radius * pushOut;
       const tx = sx + Math.cos(angle) * r;
-      const ty = sy + Math.sin(angle) * r * 0.65;
+      const ty = sy + Math.sin(angle) * r * 0.6;
 
-      s.ox = lerp(s.ox, tx, 0.06);
-      s.oy = lerp(s.oy, ty, 0.06);
+      s.ox = lerp(s.ox, tx, 0.05);
+      s.oy = lerp(s.oy, ty, 0.05);
 
       const outAngle = Math.atan2(s.oy - sy, s.ox - sx) * (180 / Math.PI) + 90;
-      const wobble = Math.sin(now * 1.0 + s.floatPhase) * 2;
+      const wobble = Math.sin(now * 0.8 + s.floatPhase) * 2;
       const finalRot = outAngle + wobble + 270;
 
-      s.el.style.transform = `translate(${s.ox - 7}px, ${s.oy - 40}px) rotate(${finalRot}deg)`;
-      s.el.style.opacity = Math.min(1, 0.6 + 0.4 * (1 - Math.abs(s.ox - mx) / 500));
+      s.el.style.transform = `translate(${s.ox - 10}px, ${s.oy - 65}px) rotate(${finalRot}deg)`;
+
+      // Distance-based opacity — brighter when closer to center
+      const distFromCenter = Math.sqrt(s.ox * s.ox + s.oy * s.oy);
+      s.el.style.opacity = Math.min(1, 0.5 + 0.5 * (1 - Math.abs(s.ox - mx) / 600));
     }
 
     requestAnimationFrame(loop);
@@ -627,33 +490,57 @@ body{
   function resize(){
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
-    updateFigMetrics();
   }
   resize();
   window.addEventListener('resize', resize);
 
-  const PARTICLE_COUNT = 45;
+  const PARTICLE_COUNT = 50;
   const particles = [];
   for (let i = 0; i < PARTICLE_COUNT; i++) {
     particles.push({
       x: Math.random() * W,
       y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.12,
-      vy: -(0.04 + Math.random() * 0.12),
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: -(0.04 + Math.random() * 0.15),
       r: 1 + Math.random() * 2.5,
-      alpha: 0.1 + Math.random() * 0.3,
+      alpha: 0.08 + Math.random() * 0.25,
       phase: Math.random() * Math.PI * 2,
-      // Green/gold hue for spiritual energy
-      hue: 120 + Math.random() * 60 // green to yellow-green
+      hue: 120 + Math.random() * 60
     });
   }
 
-  function drawParticles(){
+  // ==================== LIGHTNING BOLTS ====================
+  const bolts = [];
+
+  function spawnLightning(){
+    if (Math.random() > 0.35) return;
+    const x = Math.random() * W;
+    const y = Math.random() * H * 0.2;
+    const segments = 6 + Math.floor(Math.random() * 10);
+    const points = [{x, y}];
+    let cx = x, cy = y;
+    for (let i = 0; i < segments; i++) {
+      cx += (Math.random() - 0.5) * 50;
+      cy += 15 + Math.random() * 30;
+      points.push({x: cx, y: cy});
+    }
+    bolts.push({
+      points,
+      alpha: 0.12 + Math.random() * 0.18,
+      life: 1.0,
+      decay: 0.015 + Math.random() * 0.025
+    });
+  }
+
+  setInterval(spawnLightning, 2500);
+
+  function drawScene(){
     ctx.clearRect(0, 0, W, H);
 
+    // Draw particles
     for (const p of particles) {
       p.vy = lerp(p.vy, -(0.04 + p.r * 0.03), 0.01);
-      p.vx += Math.sin(Date.now() * 0.001 + p.phase) * 0.0015;
+      p.vx += Math.sin(Date.now() * 0.001 + p.phase) * 0.002;
 
       p.x += p.vx;
       p.y += p.vy;
@@ -662,13 +549,11 @@ body{
       if (p.x < -10) p.x = W + 10;
       if (p.x > W + 10) p.x = -10;
 
-      // Mouse repulsion
       if (mx !== undefined) {
-        const dx = p.x - mx;
-        const dy = p.y - my;
+        const dx = p.x - mx, dy = p.y - my;
         const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < 70 && d > 0) {
-          const force = (1 - d / 70) * 1.2;
+        if (d < 80 && d > 0) {
+          const force = (1 - d / 80) * 1.2;
           p.x += (dx / d) * force;
           p.y += (dy / d) * force;
         }
@@ -676,49 +561,20 @@ body{
 
       const flicker = 0.6 + 0.4 * Math.sin(Date.now() * 0.002 + p.phase);
 
-      // Draw spiritual energy orb
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = `hsla(${p.hue}, 60%, 65%, ${p.alpha * flicker})`;
       ctx.fill();
 
-      // Glow
       if (p.r > 1.5) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 40%, 55%, ${p.alpha * flicker * 0.06})`;
+        ctx.fillStyle = `hsla(${p.hue}, 40%, 55%, ${p.alpha * flicker * 0.05})`;
         ctx.fill();
       }
     }
-    requestAnimationFrame(drawParticles);
-  }
 
-  // ==================== LIGHTNING BOLTS (canvas overlay) ====================
-  // Periodic lightning flash particles
-  const bolts = [];
-  function spawnLightning(){
-    if (Math.random() > 0.3) return;
-    const x = Math.random() * W;
-    const y = Math.random() * H * 0.2;
-    const segments = 5 + Math.floor(Math.random() * 8);
-    const points = [{x, y}];
-    let cx = x, cy = y;
-    for (let i = 0; i < segments; i++) {
-      cx += (Math.random() - 0.5) * 40;
-      cy += 20 + Math.random() * 40;
-      points.push({x: cx, y: cy});
-    }
-    bolts.push({
-      points,
-      alpha: 0.15 + Math.random() * 0.2,
-      life: 1.0,
-      decay: 0.02 + Math.random() * 0.03
-    });
-  }
-
-  setInterval(spawnLightning, 3000);
-
-  function drawBolts(){
+    // Draw lightning bolts
     for (let i = bolts.length - 1; i >= 0; i--) {
       const b = bolts[i];
       b.life -= b.decay;
@@ -727,13 +583,12 @@ body{
       ctx.beginPath();
       ctx.moveTo(b.points[0].x, b.points[0].y);
       for (let j = 1; j < b.points.length; j++) {
-        // Add jitter for live feel
         const jx = b.points[j].x + (Math.random() - 0.5) * 3;
         const jy = b.points[j].y + (Math.random() - 0.5) * 3;
         ctx.lineTo(jx, jy);
       }
-      ctx.strokeStyle = `rgba(180, 240, 210, ${b.alpha * b.life})`;
-      ctx.lineWidth = 1 + b.life;
+      ctx.strokeStyle = `rgba(100, 255, 180, ${b.alpha * b.life})`;
+      ctx.lineWidth = 1.2 + b.life * 0.5;
       ctx.stroke();
 
       // Glow
@@ -742,54 +597,17 @@ body{
       for (let j = 1; j < b.points.length; j++) {
         ctx.lineTo(b.points[j].x, b.points[j].y);
       }
-      ctx.strokeStyle = `rgba(120, 220, 180, ${b.alpha * b.life * 0.3})`;
-      ctx.lineWidth = 3 + b.life * 2;
+      ctx.strokeStyle = `rgba(60, 220, 150, ${b.alpha * b.life * 0.25})`;
+      ctx.lineWidth = 4 + b.life * 3;
       ctx.stroke();
     }
+
+    requestAnimationFrame(drawScene);
   }
 
-  // Overlay bolt drawing into particle loop
-  const origDraw = drawParticles;
-  drawParticles = function(){
-    ctx.clearRect(0, 0, W, H);
-    for (const p of particles) {
-      // ... same particle logic (copy from above)
-      p.vy = lerp(p.vy, -(0.04 + p.r * 0.03), 0.01);
-      p.vx += Math.sin(Date.now() * 0.001 + p.phase) * 0.0015;
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
-      if (p.x < -10) p.x = W + 10;
-      if (p.x > W + 10) p.x = -10;
-      if (mx !== undefined) {
-        const dx = p.x - mx, dy = p.y - my;
-        const d = Math.sqrt(dx * dx + dy * dy);
-        if (d < 70 && d > 0) {
-          const force = (1 - d / 70) * 1.2;
-          p.x += (dx / d) * force;
-          p.y += (dy / d) * force;
-        }
-      }
-      const flicker = 0.6 + 0.4 * Math.sin(Date.now() * 0.002 + p.phase);
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${p.hue}, 60%, 65%, ${p.alpha * flicker})`;
-      ctx.fill();
-      if (p.r > 1.5) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 40%, 55%, ${p.alpha * flicker * 0.06})`;
-        ctx.fill();
-      }
-    }
-    drawBolts();
-    requestAnimationFrame(drawParticles);
-  };
-
   // Start
-  updateFigMetrics();
   loop();
-  drawParticles();
+  drawScene();
 })();
 </script>
 </body>
