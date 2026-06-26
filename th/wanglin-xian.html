@@ -407,15 +407,15 @@ body{
   const NET_COUNT = 40;
   const netParticles = [];
 
-    for (let i = 0; i < NET_COUNT; i++) {
+  for (let i = 0; i < NET_COUNT; i++) {
     const angle = Math.random() * Math.PI * 2;
     netParticles.push({
       x: Math.random() * nW,
       y: Math.random() * nH,
-      vx: Math.cos(angle) * (0.04 + Math.random() * 0.08),
-      vy: Math.sin(angle) * (0.04 + Math.random() * 0.08),
-      r: 1.5 + Math.random() * 3,
-      alpha: 0.15 + Math.random() * 0.25,
+      vx: Math.cos(angle) * (0.10 + Math.random() * 0.15),
+      vy: Math.sin(angle) * (0.10 + Math.random() * 0.15),
+      r: 2 + Math.random() * 3.5,
+      alpha: 0.30 + Math.random() * 0.25,
       phase: Math.random() * Math.PI * 2,
       turnSpeed: 0.003 + Math.random() * 0.01,
       wanderAngle: Math.random() * Math.PI * 2,
@@ -441,7 +441,7 @@ body{
       ctx.lineTo(lx, ly);
     }
     ctx.lineTo(x2, y2);
-    ctx.strokeStyle = `rgba(80, 255, 200, ${alpha})`;
+    ctx.strokeStyle = `rgba(120, 255, 220, ${alpha})`;
     ctx.lineWidth = width;
     ctx.stroke();
   }
@@ -452,22 +452,22 @@ body{
 
     for (const p of netParticles) {
       p.wanderAngle += (Math.random() - 0.5) * p.turnSpeed;
-      p.vx += Math.cos(p.wanderAngle) * 0.001;
-      p.vy += Math.sin(p.wanderAngle) * 0.001;
+      p.vx += Math.cos(p.wanderAngle) * 0.002;
+      p.vy += Math.sin(p.wanderAngle) * 0.002;
 
       if (nmx > 0) {
         const dx = p.x - nmx, dy = p.y - nmy;
         const d = Math.sqrt(dx*dx + dy*dy) || 1;
         if (d < 180) {
-          const force = (1 - d / 180) * 0.04;
+          const force = (1 - d / 180) * 0.06;
           p.vx += (dx / d) * force;
           p.vy += (dy / d) * force;
         }
       }
 
       const spd = Math.sqrt(p.vx*p.vx + p.vy*p.vy);
-      if (spd > 0.2) { p.vx = (p.vx/spd)*0.2; p.vy = (p.vy/spd)*0.2; }
-      if (spd < 0.04) { p.vx *= 1.01; p.vy *= 1.01; }
+      if (spd > 0.4) { p.vx = (p.vx/spd)*0.4; p.vy = (p.vy/spd)*0.4; }
+      if (spd < 0.06) { p.vx *= 1.01; p.vy *= 1.01; }
 
       p.x += p.vx;
       p.y += p.vy;
@@ -486,12 +486,12 @@ body{
         const maxDist = 180 + a.bold * 80 + b.bold * 80;
 
         if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.20;
-          const thickness = (1 - dist / maxDist) * 1.8;
+          const alpha = (1 - dist / maxDist) * 0.35;
+          const thickness = (1 - dist / maxDist) * 2.5;
 
-          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.6, thickness);
-          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.12, thickness * 4);
-          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.25, thickness * 0.4);
+          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.7, thickness);
+          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.15, thickness * 4);
+          lightningLine(nCtx, a.x, a.y, b.x, b.y, alpha * 0.3, thickness * 0.5);
         }
       }
     }
@@ -502,19 +502,19 @@ body{
       let mGlow = 0;
       if (nmx > 0) {
         const md = Math.sqrt((p.x - nmx)**2 + (p.y - nmy)**2);
-        if (md < 150) mGlow = (1 - md / 150) * 0.4;
+        if (md < 250) mGlow = (1 - md / 250) * 0.5;
       }
 
       // Glow aura
       nCtx.beginPath();
-      nCtx.arc(p.x, p.y, p.r * 4 + mGlow * 10, 0, Math.PI * 2);
-      nCtx.fillStyle = `rgba(80, 230, 180, ${p.alpha * 0.04 * pulse + mGlow * 0.04})`;
+      nCtx.arc(p.x, p.y, p.r * 5 + mGlow * 12, 0, Math.PI * 2);
+      nCtx.fillStyle = `rgba(80, 240, 190, ${p.alpha * 0.06 * pulse + mGlow * 0.06})`;
       nCtx.fill();
 
       // Core
       nCtx.beginPath();
-      nCtx.arc(p.x, p.y, p.r * pulse * (0.5 + mGlow), 0, Math.PI * 2);
-      nCtx.fillStyle = `rgba(${160 + mGlow * 95}, 255, ${220 + mGlow * 35}, ${p.alpha * pulse + mGlow * 0.3})`;
+      nCtx.arc(p.x, p.y, p.r * pulse * (0.6 + mGlow * 0.5), 0, Math.PI * 2);
+      nCtx.fillStyle = `rgba(${180 + mGlow * 75}, 255, ${230 + mGlow * 25}, ${p.alpha * pulse + mGlow * 0.4})`;
       nCtx.fill();
     }
 
