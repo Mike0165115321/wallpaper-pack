@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WangLin · เซียนกระบี่</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@100;200;300;400;500;600&family=Noto+Serif+Thai:wght@200;400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden}
+body{
+  font-family:'Sarabun','Noto Sans Thai',sans-serif;
+  background:#060e0a;
+  user-select:none;
+  -webkit-font-smoothing:antialiased
+}
+
+/* === BG — เซียนกระบี่ === */
+.bg-wrap{
+  position:fixed;inset:0;
+  animation:bgBreath 20s ease-in-out infinite alternate
+}
+@keyframes bgBreath{
+  0%{transform:scale(1)}
+  100%{transform:scale(1.03)}
+}
+.bg{
+  position:absolute;inset:0;
+  background:
+    url('สวยงาม.png') center/cover no-repeat;
+  filter:brightness(0.60) saturate(1.1) contrast(1.05);
+  will-change:transform;
+  transition:transform 0.8s cubic-bezier(0.16,1,0.3,1)
+}
+.bg-overlay{
+  position:fixed;inset:0;z-index:1;
+  background:
+    linear-gradient(180deg, rgba(4,12,8,0.45) 0%, transparent 25%, transparent 70%, rgba(2,8,4,0.55) 100%),
+    radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(2,8,4,0.35) 100%);
+  pointer-events:none
+}
+
+/* === Mist layers === */
+.mist{
+  position:fixed;inset:0;z-index:2;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 100% 30% at 20% 50%, rgba(20,60,40,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 80% 25% at 80% 40%, rgba(30,70,50,0.03) 0%, transparent 70%);
+  animation:mistDrift 40s ease-in-out infinite alternate;
+  will-change:transform,opacity
+}
+@keyframes mistDrift{
+  0%{transform:translate(-3%,0);opacity:0.6}
+  50%{opacity:0.8}
+  100%{transform:translate(3%,1%);opacity:0.5}
+}
+@media(prefers-reduced-motion:reduce){.mist{animation:none}}
+
+/* === Lightning === */
+.lightning{
+  position:fixed;inset:0;z-index:2;
+  pointer-events:none;opacity:0;
+  background:
+    linear-gradient(135deg, rgba(180,230,255,0.02) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 80% at 70% 15%, rgba(180,230,255,0.015) 0%, transparent 100%);
+  animation:lightningFlash 8s ease-in-out infinite
+}
+@keyframes lightningFlash{
+  0%,90%,94%,100%{opacity:0}
+  91%{opacity:0.4}
+  92%{opacity:0}
+  93%{opacity:0.2}
+  95%{opacity:0}
+}
+@media(prefers-reduced-motion:reduce){.lightning{display:none}}
+
+/* === Star field (jade tinted) === */
+.stars{
+  position:fixed;inset:0;z-index:1;
+  pointer-events:none;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(180,220,200,0.5), transparent),
+    radial-gradient(1px 1px at 30% 70%, rgba(180,220,200,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 50% 10%, rgba(200,240,220,0.6), transparent),
+    radial-gradient(1px 1px at 70% 30%, rgba(180,220,200,0.3), transparent),
+    radial-gradient(1px 1px at 90% 60%, rgba(200,240,220,0.4), transparent),
+    radial-gradient(1.5px 1.5px at 15% 85%, rgba(180,220,200,0.3), transparent),
+    radial-gradient(1px 1px at 45% 45%, rgba(180,220,200,0.3), transparent),
+    radial-gradient(1px 1px at 80% 80%, rgba(200,240,220,0.4), transparent);
+  animation:twinkle 5s ease-in-out infinite alternate;
+}
+@keyframes twinkle{
+  0%{opacity:0.4}
+  100%{opacity:0.9}
+}
+@media(prefers-reduced-motion:reduce){.stars{animation:none;opacity:0.6}}
+
+/* === Main container === */
+.main{
+  position:fixed;inset:0;z-index:5;
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;
+  pointer-events:none
+}
+
+/* === Clock — jade/gold top === */
+.clock-panel{
+  position:fixed;top:clamp(18px,3.5vh,44px);
+  left:50%;transform:translateX(-50%);
+  z-index:7;text-align:center;
+  pointer-events:none
+}
+.clock{
+  font-size:clamp(32px,min(9vh,7vw),72px);
+  font-weight:100;
+  color:rgba(200,230,210,0.90);
+  letter-spacing:clamp(4px,1.5vw,10px);
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+  font-family:'Noto Serif Thai','Sarabun',serif;
+  text-shadow:0 0 40px rgba(80,180,130,0.06), 0 1px 20px rgba(0,0,0,0.5)
+}
+.clock .sep{opacity:0.30;margin:0 clamp(2px,0.3vw,6px)}
+.sec-line{
+  font-size:clamp(12px,2.2vh,22px);
+  font-weight:200;
+  color:rgba(180,210,195,0.25);
+  letter-spacing:6px;
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+  margin-top:clamp(4px,0.6vh,8px)
+}
+.rule{
+  width:clamp(20px,3.5vw,36px);height:1px;
+  background:linear-gradient(90deg,transparent,rgba(100,200,160,0.12),transparent);
+  margin:clamp(10px,1.5vh,16px) auto clamp(8px,1vh,12px)
+}
+.date-line{
+  font-size:clamp(11px,1.6vh,15px);
+  font-weight:300;
+  color:rgba(180,210,195,0.45);
+  letter-spacing:2px;
+  font-family:'Noto Serif Thai','Sarabun',serif;
+  text-shadow:0 1px 10px rgba(0,0,0,0.4)
+}
+.date-line .num{font-weight:500;color:rgba(210,235,220,0.65)}
+
+/* === Calendar — bottom === */
+.cal-wrap{
+  position:fixed;bottom:clamp(14px,2.5vh,28px);
+  left:50%;transform:translateX(-50%);
+  z-index:7;pointer-events:none
+}
+.cal-panel{
+  background:rgba(8,20,14,0.50);
+  backdrop-filter:blur(12px) saturate(1.1);
+  -webkit-backdrop-filter:blur(12px) saturate(1.1);
+  border-radius:10px;
+  border:1px solid rgba(80,160,120,0.06);
+  padding:clamp(6px,1vh,12px) clamp(12px,1.8vw,20px);
+  box-shadow:0 4px 30px rgba(0,0,0,0.15)
+}
+.cal-header{
+  font-size:clamp(10px,1.3vh,13px);
+  font-weight:400;
+  color:rgba(180,210,195,0.40);
+  letter-spacing:2px;
+  margin-bottom:clamp(3px,0.4vh,6px);
+  text-align:center
+}
+.cal-header .cal-year{
+  font-weight:200;
+  color:rgba(180,210,195,0.18);
+  font-size:clamp(8px,1vh,11px);
+  margin-left:3px
+}
+.cal-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:1px
+}
+.cal-dow{
+  font-size:clamp(7px,0.9vh,10px);
+  font-weight:400;
+  color:rgba(180,210,195,0.15);
+  text-align:center;
+  padding:0 0 clamp(3px,0.4vh,5px) 0
+}
+.cal-day{
+  font-size:clamp(9px,1.1vh,12px);
+  font-weight:300;
+  color:rgba(180,210,195,0.30);
+  text-align:center;
+  padding:2px;
+  line-height:1.3;
+  width:clamp(18px,2.6vh,26px);
+  height:clamp(18px,2.6vh,26px);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto;
+  border-radius:4px
+}
+.cal-day.other{color:rgba(180,210,195,0.05)}
+.cal-day.today{
+  color:rgba(210,235,220,0.80);
+  font-weight:600;
+  background:rgba(80,180,130,0.08);
+  border:1px solid rgba(80,180,130,0.10)
+}
+
+/* === Celestial being container === */
+.xian-wrap{
+  position:relative;
+  width:clamp(180px, 35vh, 320px);
+  height:clamp(260px, 48vh, 460px);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:clamp(6px,1.5vh,16px)
+}
+.xian-wrap svg{
+  width:100%;height:100%;
+  overflow:visible
+}
+
+/* === Swords container === */
+.swords-wrap{
+  position:fixed;inset:0;z-index:6;
+  pointer-events:none
+}
+.sword{
+  position:absolute;
+  width:14px;height:clamp(55px,9vh,80px);
+  transform-origin:50% 100%;
+  will-change:transform;
+  transition:opacity 0.5s
+}
+.sword svg{
+  width:100%;height:100%;
+  display:block;
+  filter:drop-shadow(0 0 8px rgba(80,200,150,0.10))
+}
+.sword-glow{
+  position:absolute;
+  width:14px;height:clamp(55px,9vh,80px);
+  top:0;left:0;
+  background:linear-gradient(180deg, rgba(80,200,150,0.04) 0%, transparent 100%);
+  border-radius:10px;
+  pointer-events:none
+}
+
+/* === Brand === */
+.brand{
+  position:fixed;z-index:5;pointer-events:none;
+  bottom:clamp(6px,0.8vh,10px);right:clamp(12px,1.8vw,20px);
+  font-size:clamp(5px,0.7vh,7px);
+  font-weight:200;color:rgba(180,210,195,0.03);
+  letter-spacing:clamp(10px,2vw,20px);
+  text-transform:uppercase;text-wrap:nowrap
+}
+
+/* === Particles canvas === */
+#particles{
+  position:fixed;inset:0;z-index:3;
+  pointer-events:none
+}
+
+/* === Reduced motion === */
+@media(prefers-reduced-motion:reduce){
+  .bg-wrap{animation:none}
+  .bg{filter:brightness(0.65) saturate(1.05)}
+  .stars{animation:none}
+  .mist{animation:none}
+  .lightning{display:none}
+  .sword{display:none}
+  #rightArm{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-wrap">
+  <div class="bg" id="sceneBg"></div>
+</div>
+<div class="bg-overlay"></div>
+<div class="stars"></div>
+<div class="mist"></div>
+<div class="lightning"></div>
+<canvas id="particles"></canvas>
+
+<div class="swords-wrap" id="swordsWrap"></div>
+
+<div class="main">
+  <div class="clock-panel">
+    <div class="clock" aria-live="polite">
+      <span id="clockH">00</span><span class="sep">:</span><span id="clockM">00</span>
+    </div>
+    <div class="sec-line"><span id="clockS">00</span></div>
+    <div class="rule"></div>
+    <div class="date-line" id="dateDisplay">---</div>
+  </div>
+
+  <div class="cal-wrap">
+    <div class="cal-panel">
+      <div id="calendar"></div>
+    </div>
+  </div>
+
+  <div class="xian-wrap">
+    <svg viewBox="0 0 240 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="xianAura" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#5ac08a" stop-opacity="0.05"/>
+          <stop offset="40%" stop-color="#3a9860" stop-opacity="0.03"/>
+          <stop offset="100%" stop-color="#2a7848" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="xianInnerAura" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#80d4a0" stop-opacity="0.08"/>
+          <stop offset="50%" stop-color="#4aaa70" stop-opacity="0.03"/>
+          <stop offset="100%" stop-color="#2a7848" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="figureBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a3828"/>
+          <stop offset="40%" stop-color="#142c1e"/>
+          <stop offset="100%" stop-color="#0e1e14"/>
+        </linearGradient>
+        <linearGradient id="robeTrim" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#80d4a0" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="#80d4a0" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="armGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1e4030"/>
+          <stop offset="100%" stop-color="#162c20"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Aura / Mandala -->
+      <circle cx="120" cy="210" r="130" fill="url(#xianAura)"/>
+      <circle cx="120" cy="210" r="100" fill="url(#xianInnerAura)"/>
+      <circle cx="120" cy="210" r="120" stroke="rgba(80,200,150,0.03)" stroke-width="0.5"/>
+      <circle cx="120" cy="210" r="110" stroke="rgba(80,200,150,0.02)" stroke-width="0.3"/>
+      <circle cx="120" cy="210" r="90" stroke="rgba(80,200,150,0.02)" stroke-width="0.3"/>
+
+      <!-- Backlight -->
+      <ellipse cx="120" cy="190" rx="45" ry="80" fill="rgba(80,200,150,0.015)"/>
+
+      <!-- === Celestial Being === -->
+      <!-- Head -->
+      <ellipse cx="120" cy="82" rx="13" ry="17" fill="url(#figureBody)" stroke="rgba(80,200,150,0.05)" stroke-width="0.5"/>
+
+      <!-- Crown / headpiece (jade style) -->
+      <path d="M107,76 Q112,50 120,42 Q128,50 133,76" fill="url(#figureBody)" stroke="rgba(80,200,150,0.06)" stroke-width="0.8"/>
+      <ellipse cx="120" cy="45" rx="3.5" ry="1.8" fill="rgba(80,200,150,0.15)"/>
+      <!-- Crown jewel -->
+      <circle cx="120" cy="40" r="2" fill="rgba(80,200,150,0.10)"/>
+      <circle cx="108" cy="66" r="1.2" fill="rgba(80,200,150,0.10)"/>
+      <circle cx="132" cy="66" r="1.2" fill="rgba(80,200,150,0.10)"/>
+
+      <!-- Hair flowing -->
+      <path d="M106,80 Q98,98 95,130 Q97,135 105,133 Q108,116 110,98" fill="url(#figureBody)"/>
+      <path d="M134,80 Q142,98 145,130 Q143,135 135,133 Q132,116 130,98" fill="url(#figureBody)"/>
+
+      <!-- Neck -->
+      <rect x="116" y="98" width="8" height="10" rx="3" fill="url(#figureBody)"/>
+
+      <!-- Upper body — jade robes -->
+      <path d="M95,108 Q88,128 82,175 Q78,205 72,330 L168,330 Q162,205 158,175 Q152,128 145,108 Z"
+            fill="url(#figureBody)" stroke="rgba(80,200,150,0.04)" stroke-width="0.5"/>
+      <!-- Robe edge -->
+      <path d="M95,108 Q88,128 82,175 Q78,205 72,330"
+            fill="none" stroke="url(#robeTrim)" stroke-width="1"/>
+
+      <!-- Collar -->
+      <path d="M110,108 Q120,122 130,108" fill="none" stroke="rgba(80,200,150,0.06)" stroke-width="0.8"/>
+
+      <!-- Belt / sash (jade ornament) -->
+      <path d="M84,205 Q120,215 156,205" fill="none" stroke="rgba(80,200,150,0.05)" stroke-width="1.2"/>
+      <circle cx="120" cy="210" r="3" fill="rgba(80,200,150,0.06)"/>
+      <circle cx="120" cy="210" r="1.5" fill="rgba(80,200,150,0.10)"/>
+
+      <!-- Left arm (resting) -->
+      <path d="M95,116 Q75,132 58,168 Q53,182 56,198 Q50,208 48,222"
+            fill="none" stroke="url(#figureBody)" stroke-width="11" stroke-linecap="round"/>
+      <path d="M95,116 Q75,132 58,168"
+            fill="none" stroke="rgba(80,200,150,0.03)" stroke-width="1"/>
+
+      <!-- Ribbon from left arm -->
+      <path d="M48,218 Q38,232 42,250 Q48,265 36,278"
+            fill="none" stroke="rgba(80,200,150,0.05)" stroke-width="1.8"/>
+
+      <!-- === RIGHT ARM (raises, rotates to track swords) === -->
+      <g id="rightArm">
+        <!-- Arm glow -->
+        <path d="M150,116 Q158,96 155,68 Q153,52 150,40"
+              fill="none" stroke="rgba(80,200,150,0.03)" stroke-width="12" stroke-linecap="round"/>
+
+        <!-- Sleeve -->
+        <path d="M145,112 Q157,115 164,122 Q168,128 161,136 Q155,132 148,128"
+              fill="url(#figureBody)" stroke="rgba(80,200,150,0.04)" stroke-width="0.5"/>
+
+        <!-- Arm -->
+        <path d="M150,116 Q158,96 155,68 Q153,52 150,40"
+              fill="none" stroke="url(#armGrad)" stroke-width="7" stroke-linecap="round"/>
+        <!-- Arm highlight -->
+        <path d="M150,114 Q157,95 154,68 Q153,54 150,42"
+              fill="none" stroke="rgba(80,200,150,0.03)" stroke-width="1"/>
+
+        <!-- Hand in sword gesture -->
+        <g transform="translate(150,38)">
+          <circle cx="0" cy="0" r="3.5" fill="url(#figureBody)" stroke="rgba(80,200,150,0.03)" stroke-width="0.4"/>
+          <!-- Fingers extended up (sword mudra) -->
+          <path d="M-1,-3 Q0,-13 1,-17" fill="none" stroke="url(#armGrad)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M1.5,-3 Q2.5,-11 2.5,-15" fill="none" stroke="rgba(80,200,150,0.02)" stroke-width="0.7" stroke-linecap="round"/>
+          <path d="M2,-2 Q3,-10 3,-14" fill="none" stroke="url(#armGrad)" stroke-width="2.2" stroke-linecap="round"/>
+        </g>
+      </g>
+
+      <!-- Flowing ribbon from right arm -->
+      <g opacity="0.4">
+        <path d="M158,128 Q172,138 176,158 Q178,175 168,190"
+              fill="none" stroke="rgba(80,200,150,0.04)" stroke-width="1.3"/>
+        <path d="M160,130 Q178,142 182,165 Q185,185 172,200"
+              fill="none" stroke="rgba(80,200,150,0.02)" stroke-width="0.8"/>
+      </g>
+
+      <!-- Lotus base -->
+      <g opacity="0.03">
+        <path d="M90,335 Q95,320 100,335 Q105,315 110,335 Q115,318 120,335 Q125,315 130,335 Q135,320 140,335 Q145,315 150,335"
+              fill="none" stroke="#80d4a0" stroke-width="1"/>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<div class="brand">WANGLIN · 望林</div>
+
+<script>
+(function(){
+  'use strict';
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion:reduce)');
+  if (prefersReduced.matches) return;
+
+  // ==================== CLOCK + CALENDAR ====================
+  const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const days   = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+  const dow    = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+  const $ = id => document.getElementById(id);
+  let pm=-1,ph=-1;
+
+  function renderCal(){
+    const n=new Date(),y=n.getFullYear(),m=n.getMonth(),td=n.getDate();
+    const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),dip=new Date(y,m,0).getDate();
+    let h='<div class="cal-header">'+months[m]+' <span class="cal-year">'+(y+543)+'</span></div><div class="cal-grid">';
+    for(let d=0;d<7;d++)h+='<div class="cal-dow">'+dow[d]+'</div>';
+    for(let d=dip-fd+1;d<=dip;d++)h+='<div class="cal-day other">'+d+'</div>';
+    for(let d=1;d<=dim;d++)h+='<div class="cal-day'+(d===td?' today':'')+'">'+d+'</div>';
+    const t=fd+dim;if(t%7>0)for(let d=1;d<=7-t%7;d++)h+='<div class="cal-day other">'+d+'</div>';
+    h+='</div>';
+    $('calendar').innerHTML=h;
+  }
+
+  function updateClock(){
+    const n=new Date(),h=n.getHours(),m=n.getMinutes(),s=n.getSeconds();
+    const hh=String(h).padStart(2,'0'),mm=String(m).padStart(2,'0'),ss=String(s).padStart(2,'0');
+    if(h!==ph||m!==pm){
+      $('clockH').textContent=hh;
+      $('clockM').textContent=mm;
+      $('dateDisplay').innerHTML='<span class="num">'+days[n.getDay()]+'</span>ที่ <span class="num">'+n.getDate()+'</span> '+months[n.getMonth()]+' <span class="num">'+(n.getFullYear()+543)+'</span>';
+      renderCal();
+      ph=h;pm=m;
+    }
+    $('clockS').textContent=ss;
+  }
+
+  renderCal();
+  updateClock();
+  setInterval(updateClock,500);
+
+  // ==================== SVORDS (Jian) ====================
+  const SWORD_COUNT = 7;
+  const armEl = document.getElementById('rightArm');
+  const pivotX = 150, pivotY = 116; // shoulder pivot in SVG viewBox
+
+  // Create swords — redesigned as authentic jian
+  const wrap = document.getElementById('swordsWrap');
+  const swords = [];
+  const swordSVG = `
+    <svg viewBox="0 0 14 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="jianBlade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#b0d8c0" stop-opacity="0.80"/>
+          <stop offset="25%" stop-color="#d0f0d8" stop-opacity="0.95"/>
+          <stop offset="60%" stop-color="#90c8a0" stop-opacity="0.80"/>
+          <stop offset="100%" stop-color="#70a880" stop-opacity="0.6"/>
+        </linearGradient>
+        <linearGradient id="jianGlow" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#80d4a0" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#80d4a0" stop-opacity="0.06"/>
+          <stop offset="100%" stop-color="#80d4a0" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <!-- Blade glow -->
+      <rect x="3" y="0" width="8" height="50" rx="3" fill="url(#jianGlow)"/>
+      <!-- Blade (double-edged straight sword) -->
+      <path d="M6,0 L8,0 L8.5,47 L7,50 L5.5,47 Z" fill="url(#jianBlade)"/>
+      <path d="M6,0 L7,2 L7,47 L6,49 Z" fill="rgba(255,255,255,0.06)"/>
+      <!-- Fuller (blood groove) -->
+      <line x1="7" y1="6" x2="7" y2="42" stroke="rgba(255,255,255,0.04)" stroke-width="0.4"/>
+      <!-- Guard (tsuba) — traditional jian guard -->
+      <path d="M2,49 L12,49 L11.5,51 L2.5,51 Z" fill="#2a3a30" stroke="rgba(80,200,150,0.10)" stroke-width="0.3"/>
+      <!-- Handle (wrapped) -->
+      <rect x="5" y="51" width="4" height="14" rx="1" fill="#1a2820" stroke="rgba(80,200,150,0.04)" stroke-width="0.3"/>
+      <!-- Handle cord wrapping -->
+      <line x1="5.5" y1="53" x2="8.5" y2="53" stroke="rgba(80,200,150,0.06)" stroke-width="0.5"/>
+      <line x1="5.5" y1="56" x2="8.5" y2="56" stroke="rgba(80,200,150,0.06)" stroke-width="0.5"/>
+      <line x1="5.5" y1="59" x2="8.5" y2="59" stroke="rgba(80,200,150,0.06)" stroke-width="0.5"/>
+      <line x1="5.5" y1="62" x2="8.5" y2="62" stroke="rgba(80,200,150,0.06)" stroke-width="0.5"/>
+      <!-- Pommel -->
+      <circle cx="7" cy="66" r="1.8" fill="#2a3a30" stroke="rgba(80,200,150,0.06)" stroke-width="0.3"/>
+      <!-- Tassel (jian tassel) -->
+      <path d="M7,68 Q9,73 5,78" fill="none" stroke="rgba(80,200,150,0.10)" stroke-width="1"/>
+      <path d="M7,68 Q5,74 9,79" fill="none" stroke="rgba(80,200,150,0.06)" stroke-width="0.7"/>
+    </svg>`;
+
+  for (let i = 0; i < SWORD_COUNT; i++) {
+    const el = document.createElement('div');
+    el.className = 'sword';
+    el.innerHTML = swordSVG;
+    wrap.appendChild(el);
+    swords.push({
+      el,
+      phase: (i / SWORD_COUNT) * Math.PI * 2,
+      radius: 70 + Math.random() * 30,
+      ox: 0, oy: 0,
+      tx: 0, ty: 0,
+      rot: 0,
+      floatPhase: Math.random() * Math.PI * 2
+    });
+  }
+
+  // ==================== MOUSE TRACKING ====================
+  let mx = window.innerWidth / 2;
+  let my = window.innerHeight / 2;
+  let sx = mx, sy = my;
+  let armAngle = -90;
+  let armAngleTarget = -90;
+  let figCX = window.innerWidth / 2;
+  let figCY = window.innerHeight / 2;
+  let figScale = 1;
+
+  function updateFigMetrics(){
+    const wrapEl = document.querySelector('.xian-wrap');
+    const rect = wrapEl.getBoundingClientRect();
+    figScale = rect.width / 240;
+    figCX = rect.left + 150 * figScale;
+    figCY = rect.top + 116 * figScale;
+  }
+
+  // Parallax background on mouse move (subtle)
+  const bg = document.getElementById('sceneBg');
+  let bgIdleTimer;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+
+    // Subtle background parallax
+    const px = (e.clientX / window.innerWidth - 0.5) * 18;
+    const py = (e.clientY / window.innerHeight - 0.5) * 12;
+    bg.style.transform = `translate(${px}px,${py}px) scale(1.04)`;
+
+    clearTimeout(bgIdleTimer);
+    bgIdleTimer = setTimeout(() => {
+      bg.style.transform = `scale(1.04)`;
+    }, 3000);
+  }, { passive: true });
+
+  window.addEventListener('resize', () => updateFigMetrics());
+
+  // ==================== ANIMATION LOOP ====================
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function loop(){
+    sx = lerp(sx, mx, 0.08);
+    sy = lerp(sy, my, 0.08);
+
+    // Arm angle from figure to mouse
+    const dx = sx - figCX;
+    const dy = sy - figCY;
+    let rawAngle = Math.atan2(dx, -dy) * (180 / Math.PI);
+    rawAngle = Math.max(-70, Math.min(70, rawAngle));
+    armAngleTarget = rawAngle;
+    armAngle = lerp(armAngle, armAngleTarget, 0.06);
+    armEl.setAttribute('transform', `rotate(${armAngle}, ${pivotX}, ${pivotY})`);
+
+    // Position swords orbiting around mouse
+    const now = Date.now() * 0.001;
+    for (let i = 0; i < swords.length; i++) {
+      const s = swords[i];
+      const angle = s.phase + now * 0.35;
+      const pushOut = 1 + Math.sin(now * 0.5 + s.floatPhase) * 0.06;
+
+      const r = s.radius * pushOut;
+      const tx = sx + Math.cos(angle) * r;
+      const ty = sy + Math.sin(angle) * r * 0.65;
+
+      s.ox = lerp(s.ox, tx, 0.06);
+      s.oy = lerp(s.oy, ty, 0.06);
+
+      const outAngle = Math.atan2(s.oy - sy, s.ox - sx) * (180 / Math.PI) + 90;
+      const wobble = Math.sin(now * 1.0 + s.floatPhase) * 2;
+      const finalRot = outAngle + wobble + 270;
+
+      s.el.style.transform = `translate(${s.ox - 7}px, ${s.oy - 40}px) rotate(${finalRot}deg)`;
+      s.el.style.opacity = Math.min(1, 0.6 + 0.4 * (1 - Math.abs(s.ox - mx) / 500));
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  // ==================== PARTICLES (spiritual energy) ====================
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize(){
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    updateFigMetrics();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const PARTICLE_COUNT = 45;
+  const particles = [];
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.12,
+      vy: -(0.04 + Math.random() * 0.12),
+      r: 1 + Math.random() * 2.5,
+      alpha: 0.1 + Math.random() * 0.3,
+      phase: Math.random() * Math.PI * 2,
+      // Green/gold hue for spiritual energy
+      hue: 120 + Math.random() * 60 // green to yellow-green
+    });
+  }
+
+  function drawParticles(){
+    ctx.clearRect(0, 0, W, H);
+
+    for (const p of particles) {
+      p.vy = lerp(p.vy, -(0.04 + p.r * 0.03), 0.01);
+      p.vx += Math.sin(Date.now() * 0.001 + p.phase) * 0.0015;
+
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+      if (p.x < -10) p.x = W + 10;
+      if (p.x > W + 10) p.x = -10;
+
+      // Mouse repulsion
+      if (mx !== undefined) {
+        const dx = p.x - mx;
+        const dy = p.y - my;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 70 && d > 0) {
+          const force = (1 - d / 70) * 1.2;
+          p.x += (dx / d) * force;
+          p.y += (dy / d) * force;
+        }
+      }
+
+      const flicker = 0.6 + 0.4 * Math.sin(Date.now() * 0.002 + p.phase);
+
+      // Draw spiritual energy orb
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 60%, 65%, ${p.alpha * flicker})`;
+      ctx.fill();
+
+      // Glow
+      if (p.r > 1.5) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 40%, 55%, ${p.alpha * flicker * 0.06})`;
+        ctx.fill();
+      }
+    }
+    requestAnimationFrame(drawParticles);
+  }
+
+  // ==================== LIGHTNING BOLTS (canvas overlay) ====================
+  // Periodic lightning flash particles
+  const bolts = [];
+  function spawnLightning(){
+    if (Math.random() > 0.3) return;
+    const x = Math.random() * W;
+    const y = Math.random() * H * 0.2;
+    const segments = 5 + Math.floor(Math.random() * 8);
+    const points = [{x, y}];
+    let cx = x, cy = y;
+    for (let i = 0; i < segments; i++) {
+      cx += (Math.random() - 0.5) * 40;
+      cy += 20 + Math.random() * 40;
+      points.push({x: cx, y: cy});
+    }
+    bolts.push({
+      points,
+      alpha: 0.15 + Math.random() * 0.2,
+      life: 1.0,
+      decay: 0.02 + Math.random() * 0.03
+    });
+  }
+
+  setInterval(spawnLightning, 3000);
+
+  function drawBolts(){
+    for (let i = bolts.length - 1; i >= 0; i--) {
+      const b = bolts[i];
+      b.life -= b.decay;
+      if (b.life <= 0) { bolts.splice(i, 1); continue; }
+
+      ctx.beginPath();
+      ctx.moveTo(b.points[0].x, b.points[0].y);
+      for (let j = 1; j < b.points.length; j++) {
+        // Add jitter for live feel
+        const jx = b.points[j].x + (Math.random() - 0.5) * 3;
+        const jy = b.points[j].y + (Math.random() - 0.5) * 3;
+        ctx.lineTo(jx, jy);
+      }
+      ctx.strokeStyle = `rgba(180, 240, 210, ${b.alpha * b.life})`;
+      ctx.lineWidth = 1 + b.life;
+      ctx.stroke();
+
+      // Glow
+      ctx.beginPath();
+      ctx.moveTo(b.points[0].x, b.points[0].y);
+      for (let j = 1; j < b.points.length; j++) {
+        ctx.lineTo(b.points[j].x, b.points[j].y);
+      }
+      ctx.strokeStyle = `rgba(120, 220, 180, ${b.alpha * b.life * 0.3})`;
+      ctx.lineWidth = 3 + b.life * 2;
+      ctx.stroke();
+    }
+  }
+
+  // Overlay bolt drawing into particle loop
+  const origDraw = drawParticles;
+  drawParticles = function(){
+    ctx.clearRect(0, 0, W, H);
+    for (const p of particles) {
+      // ... same particle logic (copy from above)
+      p.vy = lerp(p.vy, -(0.04 + p.r * 0.03), 0.01);
+      p.vx += Math.sin(Date.now() * 0.001 + p.phase) * 0.0015;
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+      if (p.x < -10) p.x = W + 10;
+      if (p.x > W + 10) p.x = -10;
+      if (mx !== undefined) {
+        const dx = p.x - mx, dy = p.y - my;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 70 && d > 0) {
+          const force = (1 - d / 70) * 1.2;
+          p.x += (dx / d) * force;
+          p.y += (dy / d) * force;
+        }
+      }
+      const flicker = 0.6 + 0.4 * Math.sin(Date.now() * 0.002 + p.phase);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 60%, 65%, ${p.alpha * flicker})`;
+      ctx.fill();
+      if (p.r > 1.5) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 40%, 55%, ${p.alpha * flicker * 0.06})`;
+        ctx.fill();
+      }
+    }
+    drawBolts();
+    requestAnimationFrame(drawParticles);
+  };
+
+  // Start
+  updateFigMetrics();
+  loop();
+  drawParticles();
+})();
+</script>
+</body>
+</html>
